@@ -4,12 +4,12 @@ Welcome to my GitHub profile! I'm a Software Developer based in the Philippines.
 
 ## About Me
 
-- 🎓 [Your Educational Background]
-- 💼 [Your Current Role or Experience]
-- 🌱 Currently learning: [Technologies or Skills]
-- 💬 Ask me about: [Topics you're knowledgeable about]
-- 📫 How to reach me: [Your Email or Contact Info]
-- ⚡ Fun fact: [An interesting fact about you]
+- 🎓 Bachelor of Science and Information Technology
+- 💼 Software Developer
+- 🌱 Countinously learning: Full-stack development
+- 💬 Ask me about: 
+- 📫 How to reach me: ssuico78@gmail.com
+- ⚡ Fun fact: 
 
 ## 🚀 Tech Stack
 
