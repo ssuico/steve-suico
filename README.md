@@ -7,9 +7,8 @@ Welcome to my GitHub profile! I'm a Software Developer based in the Philippines.
 - 🎓 Bachelor of Science and Information Technology
 - 💼 Software Developer
 - 🌱 Countinously learning: Full-stack development
-- 💬 Ask me about: 
+- 💬 Ask me about: Web development & Gaming
 - 📫 How to reach me: ssuico78@gmail.com
-- ⚡ Fun fact: 
 
 ## 🚀 Tech Stack
 
@@ -21,9 +20,15 @@ Welcome to my GitHub profile! I'm a Software Developer based in the Philippines.
 ![Bootstrap](https://img.shields.io/badge/-Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white)
 ![Zustand](https://img.shields.io/badge/-Zustand-000?style=flat)
 ![Recoil](https://img.shields.io/badge/-Recoil-3578E5?style=flat)
+![Heroicons](https://img.shields.io/badge/-Heroicons-000000?style=flat&logo=simple-icons&logoColor=white)
+![React Icons](https://img.shields.io/badge/-React%20Icons-61DAFB?style=flat&logo=react&logoColor=black) 
+
+### 🎨 Design / UX Tools
+![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)
 
 ### Backend
 ![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat&logo=node.js&logoColor=white)
+![ExcelJS](https://img.shields.io/badge/-ExcelJS-217346?style=flat&logo=microsoft-excel&logoColor=white)
 
 ### 🗄️ Database
 ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
