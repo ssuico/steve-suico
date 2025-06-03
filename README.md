@@ -6,8 +6,8 @@ Welcome to my GitHub profile! I'm a Software Developer based in the Philippines.
 
 - 🎓 Bachelor of Science and Information Technology
 - 💼 Software Developer
-- 🌱 Countinously learning: Full-stack development
-- 💬 Ask me about: Web development & Gaming
+- 🌱 Currently learning: Typescript + NextJS
+- 💬 Ask me about: Web development & AI
 - 📫 How to reach me: ssuico78@gmail.com
 
 ## 🚀 Tech Stack
