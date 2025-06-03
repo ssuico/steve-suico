@@ -1,5 +1,4 @@
-import { FaFacebook, FaGithub, FaInstagram } from "react-icons/fa6";
-import { FaSquareXTwitter } from "react-icons/fa6";
+
 
 const Navbar = () => {
   return (
@@ -14,10 +13,10 @@ const Navbar = () => {
         <a href="#contact" className='font-semibold'>Contact</a>
       </div>
       <div className='flex flex-row gap-4'>
-        <span className="h-5 w-5 cursor-pointer"><FaFacebook /></span>
+        {/* <span className="h-5 w-5 cursor-pointer"><FaFacebook /></span>
         <span className="h-5 w-5 cursor-pointer"><FaSquareXTwitter /></span>
         <span className="h-5 w-5 cursor-pointer"><FaInstagram /></span>
-        <span className="h-5 w-5 cursor-pointer"><FaGithub /></span>
+        <span className="h-5 w-5 cursor-pointer"><FaGithub /></span> */}
       </div>
     </div>
   )
