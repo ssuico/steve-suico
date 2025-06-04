@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { animate } from 'animejs'
-import gamingbg from '../../assets/gamingbg.gif'
+
+import meAvatar from '../../assets/meNeonBg.png'
 
 const animatedText = "Hi! My name is Steve you can call me HITORU."
 
@@ -30,22 +31,18 @@ const Home = () => {
   }, [])
 
   return (
-    <div
-      className="h-screen w-full flex justify-center items-center"
-      style={{
-        backgroundImage: `url(${gamingbg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div className='text-white bg-black p-5'>
-        <h2 ref={textRef} className="flex flex-wrap text-[2rem]">
+    <div id="home" className="h-screen w-full flex flex-row justify-center items-center bg-black p-10">
+      <div className='w-[25%] h-fit flex justify-center'>
+        <img src={meAvatar} className='w-[20rem] h-[30rem] rounded-xl'/>
+      </div>
+      <div className='text-white p-5 w-[70%] flex justify-center items-start flex-col'>
+        <h2 ref={textRef} className="flex flex-wrap text-[3.5rem] w-[70%]">
           {animatedText.split('').map((char, idx) => (
             <span key={idx} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</span>
           ))}
         </h2>
-        <div className='text-2xl'>
-          I am a software engineer and I love to create things with code.
+        <div className='text-2xl gradient-animated-text'>
+          I am a Software Developer and I love to create things that makes life enjoyable.
         </div>
       </div>
     </div>
