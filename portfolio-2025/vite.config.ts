@@ -11,4 +11,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      external: ['react-icons/fa'],
+    },
+  },
+  optimizeDeps: {
+    include: ['react-icons/fa'],
+  },
 })
