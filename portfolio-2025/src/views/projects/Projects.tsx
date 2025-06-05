@@ -14,7 +14,7 @@ const Projects = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold mb-4">My Projects</h2>
-          <p className="text-gray-400">Here's what I've been working on</p>
+          <p className="text-gray-400">Here's what I have worked previously</p>
         </motion.div>
 
         <motion.div
