@@ -35,10 +35,7 @@
 
 /* Text Transitions */
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:700');
-
 body {
-  font-family:'Roboto';
   background-color: #131417;  
 }
 p {
