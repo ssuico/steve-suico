@@ -8,10 +8,16 @@ import Hobbies from './Hobbies'
 const About = () => {
   const [activeSection, setActiveSection] = useState<'about' | 'skills' | 'hobbies'>('about')
 
+  const sections = [
+    { id: 'about', label: 'About Me', icon: '👋' },
+    { id: 'skills', label: 'Tech Stack', icon: '💻' },
+    { id: 'hobbies', label: 'Hobbies', icon: '🎮' },
+  ] as const;
+
   return (
     <div
       id="about"
-      className="h-screen w-full relative overflow-hidden"
+      className="h-screen w-full relative overflow-hidden flex flex-col"
       style={{
         backgroundImage: `url(${gamingbg})`,
         backgroundSize: 'cover',
@@ -19,29 +25,38 @@ const About = () => {
       }}
     >
       <div className="absolute inset-0 bg-black opacity-60 z-0" />
-
-      <div className="relative z-10 flex flex-row gap-2 justify-center items-center h-full w-full">
-        <div className="w-[40%] h-full text-white flex flex-col justify-center items-center gap-4 font-bold text-[2rem]">
-          <button onClick={() => setActiveSection('about')} className="cursor-pointer hover:scale-150 transition">
-            ------ About Me
-          </button>
-          <button onClick={() => setActiveSection('skills')} className="cursor-pointer hover:scale-150 transition">
-            ------ Tech Stack
-          </button>
-          <button onClick={() => setActiveSection('hobbies')} className="cursor-pointer hover:scale-150 transition">
-            ------ Hobbies
-          </button>
+      <div className="relative z-10 flex flex-col md:flex-row gap-8 justify-center items-center h-full w-full px-4">
+        <div className="w-full md:w-[300px] flex md:flex-col gap-4 justify-center items-center">
+          {sections.map((section) => (
+            <motion.button
+              key={section.id}
+              onClick={() => setActiveSection(section.id)}
+              className={`w-full md:w-[250px] py-4 px-6 rounded-xl text-white font-bold text-xl
+                flex items-center justify-center gap-3 transition-all duration-300
+                ${activeSection === section.id 
+                  ? 'bg-pink-500 shadow-lg shadow-pink-500/50' 
+                  : 'bg-gray-800/50 hover:bg-gray-700/50'
+                }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="text-2xl">{section.icon}</span>
+              <span>{section.label}</span>
+            </motion.button>
+          ))}
         </div>
 
-        <div className="w-[60%] h-full overflow-y-auto flex justify-center items-center p-5">
+        {/* Content Section */}
+        <div className="w-full md:w-[60%] h-full flex items-center justify-center">
           <AnimatePresence mode="wait">
             {activeSection === 'about' && (
               <motion.div
                 key="about"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.4 }}
+                className="w-full"
               >
                 <AboutMe />
               </motion.div>
@@ -49,10 +64,11 @@ const About = () => {
             {activeSection === 'skills' && (
               <motion.div
                 key="skills"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.4 }}
+                className="w-full"
               >
                 <Skills />
               </motion.div>
@@ -60,10 +76,11 @@ const About = () => {
             {activeSection === 'hobbies' && (
               <motion.div
                 key="hobbies"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.4 }}
+                className="w-full"
               >
                 <Hobbies />
               </motion.div>
