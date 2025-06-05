@@ -35,7 +35,7 @@ const Projects = () => {
             </div>
 
             <div className="p-8">
-              <h3 className="text-2xl font-bold mb-4">Project Name</h3>
+              <h3 className="text-2xl font-bold mb-4">Astraeus Esports Official Site</h3>
               <p className="text-gray-400 mb-6">
                 This project is a web application intendted for the organizations advertisment and official website.
                 It Showcases the organizations events, teams, and achievements in the esports community.
