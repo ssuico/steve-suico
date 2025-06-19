@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,11 +9,31 @@ const Contact = () => {
     email: '',
     message: ''
   });
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your form submission logic here
-    console.log(formData);
+    setLoading(true); // Start loading
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID!,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID!,
+      {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY!
+    )
+    .then(() => {
+      setStatus('Message sent successfully!');
+      setFormData({ name: '', email: '', message: '' });
+      setLoading(false); // Stop loading
+    })
+    .catch(() => {
+      setStatus('Failed to send message. Please try again later.');
+      setLoading(false); // Stop loading
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -132,9 +153,13 @@ const Contact = () => {
               whileTap={{ scale: 0.95 }}
               type="submit"
               className="w-full bg-pink-500 text-white py-3 rounded-lg font-medium hover:bg-pink-600 transition-colors"
+              disabled={loading}
             >
-              Send Message
+              {loading ? 'Sending...' : 'Send Message'}
             </motion.button>
+            {status && (
+              <div className="text-center mt-4 text-sm text-green-400">{status}</div>
+            )}
           </motion.form>
         </div>
       </div>
