@@ -88,7 +88,7 @@ const Contact = () => {
                 <FaLinkedin />
               </motion.a>
               <motion.a
-                href="https://twitter.com"
+                href="https://x.com/Steve46168146"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
