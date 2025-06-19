@@ -79,7 +79,7 @@ const Contact = () => {
                 <FaGithub />
               </motion.a>
               <motion.a
-                href="https://www.linkedin.com/in/steve-suico-97454a276/"
+                href="https://www.linkedin.com/in/steve-bryan-suico-97454a276/"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
