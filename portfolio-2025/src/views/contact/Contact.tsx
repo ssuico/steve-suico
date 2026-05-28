@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaPhone } from 'react-icons/fa';
 import emailjs from 'emailjs-com';
 
 const Contact = () => {
@@ -67,6 +67,27 @@ const Contact = () => {
             <p className="text-gray-400">
               Feel free to reach out to me for any questions or opportunities. I'm always open to discussing new projects and ideas.
             </p>
+
+            <div className="space-y-4">
+              <a href="mailto:ssuico78@gmail.com" className="flex items-center gap-3 text-gray-300 hover:text-pink-400 transition-colors group">
+                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
+                  <FaEnvelope className="text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Email</p>
+                  <p className="text-sm">ssuico78@gmail.com</p>
+                </div>
+              </a>
+              <a href="tel:+639165370713" className="flex items-center gap-3 text-gray-300 hover:text-pink-400 transition-colors group">
+                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
+                  <FaPhone className="text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Phone</p>
+                  <p className="text-sm">+63 916 537 0713</p>
+                </div>
+              </a>
+            </div>
             
             <div className="flex space-x-6">
               <motion.a

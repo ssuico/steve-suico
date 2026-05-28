@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaPhone } from 'react-icons/fa';
 import meAvatar from '../../assets/meNeonBg.png';
 
 const Home = () => {
@@ -66,15 +66,27 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="text-center md:text-left w-full md:w-[60%]"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Steve <span className="text-pink-500">Suico</span>
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-pink-400 text-sm md:text-base font-medium tracking-widest uppercase mb-2"
+          >
+            Hello, I'm
+          </motion.p>
+          <h1 className="text-5xl md:text-7xl font-bold mb-4">
+            Steve Bryan <span className="text-pink-500">Suico</span> Jr.
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 mb-8">
-            Full Stack Developer
+          <p className="text-xl md:text-2xl text-gray-400 mb-4">
+            Software Developer
+          </p>
+          <p className="text-sm md:text-base text-gray-500 mb-8 max-w-lg">
+            Building & deploying full-stack web applications from concept to production. 
+            Passionate about leveraging modern technologies and AI-driven workflows.
           </p>
           
           {/* Social Links */}
-          <div className="flex justify-center md:justify-start gap-6 mb-12">
+          <div className="flex justify-center md:justify-start gap-6 mb-8">
             <motion.a
               href="https://github.com/ssuico"
               target="_blank"
@@ -101,6 +113,40 @@ const Home = () => {
               className="text-2xl text-gray-400 hover:text-white transition-colors"
             >
               <FaTwitter />
+            </motion.a>
+            <motion.a
+              href="mailto:ssuico78@gmail.com"
+              whileHover={{ scale: 1.1, y: -5 }}
+              className="text-2xl text-gray-400 hover:text-white transition-colors"
+            >
+              <FaEnvelope />
+            </motion.a>
+            <motion.a
+              href="tel:+639165370713"
+              whileHover={{ scale: 1.1, y: -5 }}
+              className="text-2xl text-gray-400 hover:text-white transition-colors"
+            >
+              <FaPhone />
+            </motion.a>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex justify-center md:justify-start gap-4">
+            <motion.a
+              href="#contact"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-pink-500 rounded-lg font-medium hover:bg-pink-600 transition-colors text-sm"
+            >
+              Get In Touch
+            </motion.a>
+            <motion.a
+              href="#experience"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 border border-gray-600 rounded-lg font-medium hover:border-pink-500 hover:text-pink-400 transition-colors text-sm"
+            >
+              View Experience
             </motion.a>
           </div>
         </motion.div>

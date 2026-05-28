@@ -1,38 +1,104 @@
-import react from '../../assets/react.svg'
-import tailwind from '../../assets/tailwind.png'
-import typescript from '../../assets/Typescript.png'
-import javascript from '../../assets/Javascript.png'
-import appsscript from '../../assets/appsscript.png'
-import figma from '../../assets/figma.png'
-import node from '../../assets/nodeJs.png'
-import mongo from '../../assets/mongodb.png'
-import zustand from '../../assets/zustand.png'
-import postman from '../../assets/postman.png'
+import { motion } from 'framer-motion';
+import { 
+  FaReact, FaNodeJs, FaDocker, FaFigma, FaPython 
+} from 'react-icons/fa';
+import { 
+  SiNextdotjs, SiVite, SiTailwindcss, SiStorybook, 
+  SiFastapi, SiPostman, SiGooglecloud, SiVercel, 
+  SiZapier, SiSass, SiRailway
+} from 'react-icons/si';
+import { TbBrandFramerMotion } from 'react-icons/tb';
 
-const skills = [
-  { name: 'React', image: react },
-  { name: 'Tailwind', image: tailwind },
-  { name: 'TypeScript', image: typescript },
-  { name: 'JavaScript', image: javascript },
-  { name: 'Apps Script', image: appsscript },
-  { name: 'Figma', image: figma },
-  { name: 'Postman', image: postman },
-  { name: 'Node.js', image: node },
-  { name: 'MongoDB', image: mongo },
-    { name: 'Zustand', image: zustand },
-]
+const skillCategories = [
+  {
+    title: 'Core Competencies',
+    color: 'from-pink-500 to-rose-500',
+    items: [
+      'Full-Stack Development (Frontend-focused)',
+      'UI/UX Design & Prototyping',
+      'API Integration & Data Pipelines',
+      'Cloud Infrastructure',
+      'Workflow Automation',
+      'CI/CD & Monitoring',
+    ]
+  },
+  {
+    title: 'Frontend Technologies',
+    color: 'from-blue-500 to-cyan-500',
+    items: [
+      { name: 'ReactJS', icon: <FaReact /> },
+      { name: 'NextJS', icon: <SiNextdotjs /> },
+      { name: 'Vite', icon: <SiVite /> },
+      { name: 'Tailwind CSS', icon: <SiTailwindcss /> },
+      { name: 'Zustand', icon: <TbBrandFramerMotion /> },
+      { name: 'PugJS', icon: null },
+      { name: 'SASS', icon: <SiSass /> },
+      { name: 'Storybook', icon: <SiStorybook /> },
+    ]
+  },
+  {
+    title: 'Backend & Tools',
+    color: 'from-green-500 to-emerald-500',
+    items: [
+      { name: 'Node.js', icon: <FaNodeJs /> },
+      { name: 'Python', icon: <FaPython /> },
+      { name: 'FastAPI', icon: <SiFastapi /> },
+      { name: 'Docker', icon: <FaDocker /> },
+      { name: 'Cursor AI', icon: null },
+      { name: 'Figma', icon: <FaFigma /> },
+      { name: 'Zapier', icon: <SiZapier /> },
+      { name: 'Postman', icon: <SiPostman /> },
+    ]
+  },
+  {
+    title: 'Cloud & Data',
+    color: 'from-purple-500 to-violet-500',
+    items: [
+      { name: 'GCP', icon: <SiGooglecloud /> },
+      { name: 'Cloud Run', icon: <SiGooglecloud /> },
+      { name: 'BigQuery', icon: <SiGooglecloud /> },
+      { name: 'Cloud Tasks', icon: <SiGooglecloud /> },
+      { name: 'Cloud Schedulers', icon: <SiGooglecloud /> },
+      { name: 'Cloud Build', icon: <SiGooglecloud /> },
+      { name: 'Vercel', icon: <SiVercel /> },
+      { name: 'Railway', icon: <SiRailway /> },
+    ]
+  },
+];
 
 const Skills = () => {
   return (
-    <div className="h-full w-full flex flex-col justify-center gap-5 items-center">
-      <div className="grid grid-cols-5 gap-4">
-        {skills.map((skill, index) => (
-          <div key={index} className="flex flex-col items-center gap-2">
-            <div className="h-[200px] w-[200px] rounded-full overflow-hidden">
-              <img src={skill.image} alt={skill.name} className="h-full w-full object-cover" />
+    <div className="h-full w-full flex flex-col justify-center gap-6 items-center overflow-y-auto py-4 px-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
+        {skillCategories.map((category, catIndex) => (
+          <motion.div
+            key={category.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: catIndex * 0.1 }}
+            className="bg-gray-800/60 backdrop-blur-sm rounded-xl p-5 border border-gray-700/50"
+          >
+            <h3 className={`text-lg font-bold mb-3 bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}>
+              {category.title}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {category.items.map((item, index) => {
+                const isString = typeof item === 'string';
+                const name = isString ? item : item.name;
+                const icon = isString ? null : item.icon;
+                return (
+                  <motion.span
+                    key={index}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full text-sm text-gray-300 hover:text-white hover:bg-gray-600/50 transition-colors cursor-default"
+                  >
+                    {icon && <span className="text-base">{icon}</span>}
+                    {name}
+                  </motion.span>
+                );
+              })}
             </div>
-            <p className="text-white text-lg font-medium">{skill.name}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
