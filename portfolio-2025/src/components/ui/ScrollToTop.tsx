@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GiArrowCursor } from 'react-icons/gi';
 import { TbPlayerSkipBackFilled } from 'react-icons/tb';
 
 const ScrollToTop = () => {
