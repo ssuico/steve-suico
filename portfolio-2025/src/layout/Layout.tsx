@@ -6,6 +6,7 @@ import Experience from '@/views/experience/Experience'
 import Education from '@/views/education/Education'
 import Projects from '@/views/projects/Projects'
 import Contact from '@/views/contact/Contact'
+import ScrollToTop from '@/components/ui/ScrollToTop'
 
 const Layout = () => {
   return (
@@ -18,6 +19,7 @@ const Layout = () => {
       <Projects/>
       <Contact/>
       <Footer/>
+      <ScrollToTop/>
     </div>
   )
 }
