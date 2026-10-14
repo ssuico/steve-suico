@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw screenshot sources and the temporary browser profiles used to capture them
+src/assets/projects/_raw/
