@@ -1,54 +1,47 @@
-# React + TypeScript + Vite
+# Steve Suico — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio for Steve Bryan Suico Jr. React, TypeScript, Vite, and Tailwind CSS. Deployed on Vercel.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+yarn dev         # local dev server
+yarn typecheck   # tsc -b --noEmit
+yarn lint        # eslint
+yarn build       # production build
+yarn run check   # typecheck, lint, and build
+yarn preview     # preview the production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Yarn 1 treats `yarn check` as its own integrity command, so the project pipeline is `yarn run check`. That pipeline does not run a security audit or a formatter. There is no unit-test runner in this repo.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+The contact form sends mail through EmailJS. Create `.env.local`:
+
+```bash
+VITE_EMAILJS_SERVICE_ID=
+VITE_EMAILJS_TEMPLATE_ID=
+VITE_EMAILJS_PUBLIC_KEY=
 ```
+
+Without those values the form shows an error and asks visitors to email directly.
+
+## Add a project
+
+1. Add a cover (and optional gallery images) under `src/assets/projects/` as WebP.
+2. Append an entry to `src/data/projects.ts`.
+3. Add the case-study URL to `public/sitemap.xml`.
+
+Categories are `client`, `personal`, and `work`. Leave `links.live` and `links.repo` unset and set `links.isPrivate` when the code cannot be shared. Omit `cover` to use the gradient placeholder.
+
+## CV
+
+The Download CV buttons point at `public/Steve-Suico-CV.pdf`. Add that file to enable the download.
+
+## Routes
+
+| Path | Page |
+| --- | --- |
+| `/` | Home, with section hashes `#about`, `#services`, `#experience`, `#education`, `#projects`, `#contact` |
+| `/projects/:slug` | Case study |
