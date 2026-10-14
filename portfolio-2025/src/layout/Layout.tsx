@@ -1,5 +1,6 @@
 import About from '@/views/about/About'
 import Contact from '@/views/contact/Contact'
+import Contributions from '@/views/contributions/Contributions'
 import Education from '@/views/education/Education'
 import Experience from '@/views/experience/Experience'
 import Home from '@/views/home/Home'
@@ -15,6 +16,7 @@ const Layout = () => {
       <Experience />
       <Education />
       <Projects />
+      <Contributions />
       <Contact />
     </div>
   )
