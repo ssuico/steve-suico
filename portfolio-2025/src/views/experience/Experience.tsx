@@ -7,7 +7,7 @@ const experiences = [
     subtitle: 'Research & Development Project',
     company: 'Channel Precision Inc',
     note: 'Internal Transfer',
-    period: 'Year 2 – Present',
+    period: 'Nov 2024 – Present',
     color: 'bg-pink-500',
     highlights: [
       'Managed and maintained Amazon API pipelines (SP-API & Ads API), ensuring reliable data ingestion and high-throughput processing.',
@@ -48,8 +48,8 @@ const experiences = [
 
 const Experience = () => {
   return (
-    <div id="experience" className="min-h-screen w-full bg-gradient-to-b from-black to-gray-900 text-white py-20">
-      <div className="max-w-5xl mx-auto px-4 pt-[6rem]">
+    <section id="experience" className="scroll-mt-20 w-full bg-gradient-to-b from-black to-gray-900 py-20 text-white">
+      <div className="max-w-5xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ const Experience = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

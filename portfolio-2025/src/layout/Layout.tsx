@@ -1,25 +1,21 @@
-import Home from '@/views/home/Home'
-import Navbar from './Navbar'
-import Footer from './Footer'
 import About from '@/views/about/About'
-import Experience from '@/views/experience/Experience'
-import Education from '@/views/education/Education'
-import Projects from '@/views/projects/Projects'
 import Contact from '@/views/contact/Contact'
-import ScrollToTop from '@/components/ui/ScrollToTop'
+import Education from '@/views/education/Education'
+import Experience from '@/views/experience/Experience'
+import Home from '@/views/home/Home'
+import Projects from '@/views/projects/Projects'
+import Services from '@/views/services/Services'
 
 const Layout = () => {
   return (
-    <div className='w-full min-h-[2000px] max-h-fit flex flex-col bg-black'>
-      <Navbar/>
-      <Home/>
-      <About/>
-      <Experience/>
-      <Education/>
-      <Projects/>
-      <Contact/>
-      <Footer/>
-      <ScrollToTop/>
+    <div className="w-full flex flex-col bg-black">
+      <Home />
+      <About />
+      <Services />
+      <Experience />
+      <Education />
+      <Projects />
+      <Contact />
     </div>
   )
 }

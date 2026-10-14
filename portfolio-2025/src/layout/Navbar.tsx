@@ -1,31 +1,60 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { navLinks } from '@/data/site';
+
+const sectionIds = navLinks.map((link) => link.href.split('#')[1]);
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const location = useLocation();
+  const onHome = location.pathname === '/';
+  const solid = scrolled || !onHome;
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
+      setScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Education', href: '#education' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  useEffect(() => {
+    if (!onHome) return;
+
+    const ratios = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let bestId = '';
+        let bestRatio = 0;
+        ratios.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
+        });
+
+        if (bestId) setActiveSection(bestId);
+      },
+      { rootMargin: '-15% 0px -45% 0px', threshold: [0.15, 0.35, 0.6] },
+    );
+
+    sectionIds.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [onHome]);
 
   return (
     <motion.nav
@@ -33,46 +62,45 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-gray-900/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
+        solid ? 'bg-gray-900/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <motion.a
-            href="#home"
-            whileHover={{ scale: 1.05 }}
-            className="text-2xl font-bold text-white"
-          >
+          <Link to="/#home" className="text-2xl font-bold text-white">
             Steve<span className="text-pink-500">Suico</span>
-          </motion.a>
+          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navLinks.map((link) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                whileHover={{ scale: 1.1 }}
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                {link.name}
-              </motion.a>
-            ))}
+          <div className="hidden md:flex space-x-6">
+            {navLinks.map((link) => {
+              const sectionId = link.href.split('#')[1];
+              const isActive = onHome && activeSection === sectionId;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-sm transition-colors ${
+                    isActive ? 'text-pink-400' : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Mobile Navigation Button */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
+          <button
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-white p-2"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
           >
             {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </motion.button>
+          </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -84,15 +112,14 @@ const Navbar = () => {
           >
             <div className="px-4 py-4 space-y-4">
               {navLinks.map((link) => (
-                <motion.a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   onClick={() => setIsOpen(false)}
-                  whileHover={{ x: 10 }}
                   className="block text-gray-300 hover:text-white transition-colors"
                 >
                   {link.name}
-                </motion.a>
+                </Link>
               ))}
             </div>
           </motion.div>
@@ -102,4 +129,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

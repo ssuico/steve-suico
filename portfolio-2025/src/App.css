@@ -1,9 +1,8 @@
 #root {
   margin: 0 auto;
-  text-align: center;
   font-family: "Comfortaa", sans-serif;
   font-optical-sizing: auto;
-
+  text-align: left;
 }
 html {
   scroll-behavior: smooth;

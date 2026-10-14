@@ -1,122 +1,134 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaTwitter } from 'react-icons/fa';
 import emailjs from 'emailjs-com';
+import { site } from '@/data/site';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
+    company: '',
   });
-  const [status, setStatus] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [status, setStatus] = useState<'success' | 'error' | null>(null);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Start loading
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID!,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID!,
-      {
-        from_name: formData.name,
-        from_email: formData.email,
-        message: formData.message,
-      },
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY!
-    )
-    .then(() => {
-      setStatus('Message sent successfully!');
-      setFormData({ name: '', email: '', message: '' });
-      setLoading(false); // Stop loading
-    })
-    .catch(() => {
-      setStatus('Failed to send message. Please try again later.');
-      setLoading(false); // Stop loading
-    });
+    setStatus(null);
+    setStatusMessage('');
+
+    if (formData.company.trim()) {
+      setStatus('success');
+      setStatusMessage('Message sent successfully!');
+      setFormData({ name: '', email: '', message: '', company: '' });
+      return;
+    }
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setStatus('error');
+      setStatusMessage(`The form is not configured yet. Email me at ${site.email}.`);
+      return;
+    }
+
+    setLoading(true);
+    emailjs
+      .send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+        },
+        publicKey,
+      )
+      .then(() => {
+        setStatus('success');
+        setStatusMessage('Message sent successfully!');
+        setFormData({ name: '', email: '', message: '', company: '' });
+      })
+      .catch(() => {
+        setStatus('error');
+        setStatusMessage('Failed to send message. Please try again later.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
-    <div id="contact" className="min-h-screen w-full bg-gradient-to-b from-gray-900 to-black text-white py-20">
-      <div className="max-w-6xl mx-auto px-4 pt-[10rem]">
+    <section id="contact" className="scroll-mt-20 w-full bg-gradient-to-b from-gray-900 to-black py-20 text-white">
+      <div className="mx-auto max-w-6xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          viewport={{ once: true }}
+          className="mb-16 text-center"
         >
-          <h2 className="text-4xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-gray-400">Let's create something amazing together</p>
+          <h2 className="mb-4 text-4xl font-bold">Get In Touch</h2>
+          <p className="text-gray-300">Tell me about the product, the deadline, and what done looks like.</p>
+          <p className="mt-2 text-sm text-gray-400">{site.replyTime}</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid gap-12 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
             className="space-y-8"
           >
-            <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
-            <p className="text-gray-400">
-              Feel free to reach out to me for any questions or opportunities. I'm always open to discussing new projects and ideas.
+            <h3 className="mb-6 text-2xl font-semibold">Contact Information</h3>
+            <p className="text-gray-300">
+              I take freelance work and full-time roles. If you have a web app, a dashboard, or a pipeline that needs an owner, send a note.
             </p>
 
             <div className="space-y-4">
-              <a href="mailto:ssuico78@gmail.com" className="flex items-center gap-3 text-gray-300 hover:text-pink-400 transition-colors group">
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
-                  <FaEnvelope className="text-pink-500" />
+              <a href={`mailto:${site.email}`} className="group flex items-center gap-3 text-gray-300 transition-colors hover:text-pink-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors group-hover:bg-pink-500/20">
+                  <FaEnvelope className="text-pink-500" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Email</p>
-                  <p className="text-sm">ssuico78@gmail.com</p>
+                  <p className="text-sm">{site.email}</p>
                 </div>
               </a>
-              <a href="tel:+639165370713" className="flex items-center gap-3 text-gray-300 hover:text-pink-400 transition-colors group">
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
-                  <FaPhone className="text-pink-500" />
+              <a href={site.phoneHref} className="group flex items-center gap-3 text-gray-300 transition-colors hover:text-pink-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors group-hover:bg-pink-500/20">
+                  <FaPhone className="text-pink-500" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Phone</p>
-                  <p className="text-sm">+63 916 537 0713</p>
+                  <p className="text-sm">{site.phoneDisplay}</p>
                 </div>
               </a>
             </div>
-            
+
             <div className="flex space-x-6">
-              <motion.a
-                href="https://github.com/ssuico"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
-              >
+              <a href={site.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-2xl text-gray-400 transition-colors hover:text-white">
                 <FaGithub />
-              </motion.a>
-              <motion.a
-                href="https://www.linkedin.com/in/steve-bryan-suico-97454a276/"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
-              >
+              </a>
+              <a href={site.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-2xl text-gray-400 transition-colors hover:text-white">
                 <FaLinkedin />
-              </motion.a>
-              <motion.a
-                href="https://x.com/Steve46168146"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
-              >
+              </a>
+              <a href={site.twitter} target="_blank" rel="noopener noreferrer" aria-label="X" className="text-2xl text-gray-400 transition-colors hover:text-white">
                 <FaTwitter />
-              </motion.a>
+              </a>
             </div>
           </motion.div>
 
@@ -124,11 +136,24 @@ const Contact = () => {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
             onSubmit={handleSubmit}
-            className="space-y-6"
+            className="relative space-y-6"
           >
+            <div className="sr-only" aria-hidden="true">
+              <label htmlFor="company">Company</label>
+              <input
+                type="text"
+                id="company"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2">
+              <label htmlFor="name" className="mb-2 block text-sm font-medium">
                 Name
               </label>
               <input
@@ -137,12 +162,12 @@ const Contact = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-pink-500"
+                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium">
                 Email
               </label>
               <input
@@ -151,12 +176,12 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-pink-500"
+                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label htmlFor="message" className="block text-sm font-medium mb-2">
+              <label htmlFor="message" className="mb-2 block text-sm font-medium">
                 Message
               </label>
               <textarea
@@ -165,26 +190,29 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-pink-500"
+                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
                 required
               />
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               type="submit"
-              className="w-full bg-pink-500 text-white py-3 rounded-lg font-medium hover:bg-pink-600 transition-colors"
+              className="w-full rounded-lg bg-pink-500 py-3 font-medium text-white transition-colors hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={loading}
             >
               {loading ? 'Sending...' : 'Send Message'}
-            </motion.button>
+            </button>
             {status && (
-              <div className="text-center mt-4 text-sm text-green-400">{status}</div>
+              <p
+                className={`text-center text-sm ${status === 'error' ? 'text-red-400' : 'text-green-400'}`}
+                role={status === 'error' ? 'alert' : 'status'}
+              >
+                {statusMessage}
+              </p>
             )}
           </motion.form>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

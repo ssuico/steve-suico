@@ -5,7 +5,7 @@ import {
 import { 
   SiNextdotjs, SiVite, SiTailwindcss, SiStorybook, 
   SiFastapi, SiPostman, SiGooglecloud, SiVercel, 
-  SiZapier, SiSass, SiRailway
+  SiZapier, SiSass, SiRailway, SiGoogleappsscript
 } from 'react-icons/si';
 import { TbBrandFramerMotion } from 'react-icons/tb';
 
@@ -47,6 +47,7 @@ const skillCategories = [
       { name: 'Cursor AI', icon: null },
       { name: 'Figma', icon: <FaFigma /> },
       { name: 'Zapier', icon: <SiZapier /> },
+      { name: 'Google Apps Script', icon: <SiGoogleappsscript /> },
       { name: 'Postman', icon: <SiPostman /> },
     ]
   },
@@ -68,7 +69,7 @@ const skillCategories = [
 
 const Skills = () => {
   return (
-    <div className="h-full w-full flex flex-col justify-center gap-6 items-center overflow-y-auto py-4 px-2">
+    <div className="flex w-full flex-col items-center justify-center gap-6 px-2 py-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
         {skillCategories.map((category, catIndex) => (
           <motion.div
