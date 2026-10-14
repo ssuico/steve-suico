@@ -4,3 +4,27 @@ body {
   background-color: #131417;
   color: #e5e5e5;
 }
+
+@keyframes project-cycle {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.project-cycle {
+  transform-origin: left center;
+  animation: project-cycle 4s linear forwards;
+}
+
+.project-cycle[data-paused='true'] {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-cycle {
+    animation: none;
+  }
+}
