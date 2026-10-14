@@ -1,131 +1,159 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { navLinks } from '@/data/site';
+import { scrollToSection } from '@/lib/sectionScroll';
 
-const sectionIds = navLinks.map((link) => link.href.split('#')[1]);
+const desktopQuery = '(min-width: 1024px)';
+
+function useDesktopNav() {
+  const [desktop, setDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(desktopQuery).matches,
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia(desktopQuery);
+    const update = () => setDesktop(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  return desktop;
+}
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const desktop = useDesktopNav();
+  const reduceMotion = useReducedMotion();
   const location = useLocation();
   const onHome = location.pathname === '/';
   const solid = scrolled || !onHome;
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 24);
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (!onHome) return;
+    if (desktop) setIsOpen(false);
+  }, [desktop]);
 
-    const ratios = new Map<string, number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
-        });
-
-        let bestId = '';
-        let bestRatio = 0;
-        ratios.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-
-        if (bestId) setActiveSection(bestId);
-      },
-      { rootMargin: '-15% 0px -45% 0px', threshold: [0.15, 0.35, 0.6] },
-    );
-
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, [onHome]);
+  const followSection = (event: { preventDefault: () => void }, href: string) => {
+    setIsOpen(false);
+    if (location.pathname !== href) return;
+    event.preventDefault();
+    scrollToSection(href === '/' ? 'home' : href.slice(1));
+  };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        solid ? 'bg-gray-900/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
-      }`}
+    <motion.header
+      initial={reduceMotion ? false : { y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-4"
     >
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/#home" className="text-2xl font-bold text-white">
+      <nav
+        aria-label="Sections"
+        className={`pointer-events-auto mx-auto max-w-6xl border transition-colors duration-300 ${
+          isOpen ? 'rounded-3xl' : 'rounded-full'
+        } ${
+          solid
+            ? 'border-gray-800 bg-[#131417]/90 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-md'
+            : 'border-white/10 bg-black/35 backdrop-blur-md'
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
+          <Link
+            to="/"
+            onClick={(event) => followSection(event, '/')}
+            className="shrink-0 rounded-full px-2 py-1 text-lg font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
+          >
             Steve<span className="text-pink-500">Suico</span>
           </Link>
 
-          <div className="hidden md:flex space-x-6">
-            {navLinks.map((link) => {
-              const sectionId = link.href.split('#')[1];
-              const isActive = onHome && activeSection === sectionId;
-              return (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className={`text-sm transition-colors ${
-                    isActive ? 'text-pink-400' : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white p-2"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isOpen}
-          >
-            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-gray-900"
-          >
-            <div className="px-4 py-4 space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block text-gray-300 hover:text-white transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
+          {desktop ? (
+            <div className="flex items-center gap-0.5">
+              {navLinks.map((link) => {
+                const active = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    onClick={(event) => followSection(event, link.href)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`relative rounded-full px-3 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300 ${
+                      active ? 'text-pink-100' : 'text-gray-300 hover:text-white'
+                    }`}
+                  >
+                    {active && (
+                      <motion.span
+                        layoutId="section-pill"
+                        className="absolute inset-0 rounded-full bg-pink-500/15 ring-1 ring-pink-400/40"
+                        transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
+                      />
+                    )}
+                    <span className="relative">{link.name}</span>
+                  </Link>
+                );
+              })}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsOpen((open) => !open)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
+            </button>
+          )}
+        </div>
+
+        <AnimatePresence>
+          {!desktop && isOpen && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.25 }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col gap-1 px-3 pb-3">
+                {navLinks.map((link) => {
+                  const active = location.pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      onClick={(event) => followSection(event, link.href)}
+                      aria-current={active ? 'page' : undefined}
+                      className={`relative rounded-full px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300 ${
+                        active ? 'text-pink-100' : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {active && (
+                        <motion.span
+                          layoutId="section-pill"
+                          className="absolute inset-0 rounded-full bg-pink-500/15 ring-1 ring-pink-400/40"
+                          transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
+                        />
+                      )}
+                      <span className="relative">{link.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </motion.header>
   );
 };
 

@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import ScrollToHash from '@/components/ScrollToHash';
+import { Route, Routes, useParams } from 'react-router-dom';
+import SectionRoute from '@/components/SectionRoute';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import { sectionFromPath } from '@/data/site';
 import Footer from '@/layout/Footer';
 import Navbar from '@/layout/Navbar';
 import Layout from '@/layout/Layout';
@@ -15,15 +16,22 @@ const PageFallback = () => (
   </div>
 );
 
+function SectionPage() {
+  const { section = '' } = useParams();
+  if (!sectionFromPath(`/${section}`)) return <NotFound />;
+  return <Layout />;
+}
+
 function App() {
   return (
     <div className="w-full min-h-screen flex flex-col bg-black">
-      <ScrollToHash />
+      <SectionRoute />
       <Navbar />
       <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route path="/" element={<Layout />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="/:section" element={<SectionPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

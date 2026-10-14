@@ -50,7 +50,7 @@ const Services = () => {
                   ))}
                 </ul>
                 <Link
-                  to="/#contact"
+                  to="/contact"
                   className="mt-6 inline-flex text-sm font-medium text-pink-400 hover:text-pink-300 transition-colors"
                 >
                   Start a conversation

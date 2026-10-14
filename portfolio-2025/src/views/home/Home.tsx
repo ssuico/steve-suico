@@ -93,13 +93,13 @@ const Home = () => {
 
           <div className="flex flex-wrap justify-center md:justify-start gap-3">
             <Link
-              to="/#contact"
+              to="/contact"
               className="px-8 py-3 bg-pink-500 rounded-lg font-medium hover:bg-pink-600 transition-colors text-sm"
             >
               Get In Touch
             </Link>
             <Link
-              to="/#projects"
+              to="/projects"
               className="px-8 py-3 border border-gray-600 rounded-lg font-medium hover:border-pink-500 hover:text-pink-400 transition-colors text-sm"
             >
               View Projects

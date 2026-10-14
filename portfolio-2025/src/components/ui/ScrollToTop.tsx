@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TbPlayerSkipBackFilled } from 'react-icons/tb';
+import { holdSectionSpy, scrollToSection } from '@/lib/sectionScroll';
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -16,7 +20,12 @@ const ScrollToTop = () => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    holdSectionSpy(1600);
+    if (location.pathname === '/') {
+      scrollToSection('home');
+      return;
+    }
+    navigate('/');
   };
 
   return (

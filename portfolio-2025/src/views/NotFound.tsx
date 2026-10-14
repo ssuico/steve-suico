@@ -9,7 +9,7 @@ const NotFound = () => {
         The link may be out of date. The work samples are still on the projects section.
       </p>
       <Link
-        to="/#projects"
+        to="/projects"
         className="px-6 py-3 bg-pink-500 rounded-lg font-medium hover:bg-pink-600 transition-colors"
       >
         View projects

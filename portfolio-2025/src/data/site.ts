@@ -14,23 +14,23 @@ export const site = {
   url: 'https://steve-suico-taupe.vercel.app/',
 } as const;
 
-export const navLinks = [
-  { name: 'Home', href: '/#home' },
-  { name: 'About', href: '/#about' },
-  { name: 'Services', href: '/#services' },
-  { name: 'Experience', href: '/#experience' },
-  { name: 'Projects', href: '/#projects' },
-  { name: 'Contributions', href: '/#contributions' },
-  { name: 'Contact', href: '/#contact' },
+export const pageSections = [
+  { id: 'home', name: 'Home', path: '/' },
+  { id: 'about', name: 'About', path: '/about' },
+  { id: 'services', name: 'Services', path: '/services' },
+  { id: 'experience', name: 'Experience', path: '/experience' },
+  { id: 'education', name: 'Education', path: '/education' },
+  { id: 'projects', name: 'Projects', path: '/projects' },
+  { id: 'contributions', name: 'Contributions', path: '/contributions' },
+  { id: 'contact', name: 'Contact', path: '/contact' },
 ] as const;
 
-export const footerLinks = [
-  { name: 'Home', href: '/#home' },
-  { name: 'About', href: '/#about' },
-  { name: 'Services', href: '/#services' },
-  { name: 'Experience', href: '/#experience' },
-  { name: 'Education', href: '/#education' },
-  { name: 'Projects', href: '/#projects' },
-  { name: 'Contributions', href: '/#contributions' },
-  { name: 'Contact', href: '/#contact' },
-] as const;
+export const navLinks = pageSections
+  .filter((section) => section.id !== 'education')
+  .map((section) => ({ name: section.name, href: section.path }));
+
+export const footerLinks = pageSections.map((section) => ({ name: section.name, href: section.path }));
+
+export function sectionFromPath(pathname: string) {
+  return pageSections.find((section) => section.path === pathname) ?? null;
+}

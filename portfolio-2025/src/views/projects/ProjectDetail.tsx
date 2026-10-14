@@ -18,7 +18,7 @@ const ProjectDetail = () => {
       <main className="min-h-screen bg-black px-4 pt-28 text-center text-white">
         <h1 className="text-3xl font-bold">Project not found</h1>
         <p className="mt-3 text-gray-400">That case study is not on this site.</p>
-        <Link to="/#projects" className="mt-8 inline-block text-pink-400 hover:text-pink-300">
+        <Link to="/projects" className="mt-8 inline-block text-pink-400 hover:text-pink-300">
           Back to projects
         </Link>
       </main>
@@ -29,7 +29,7 @@ const ProjectDetail = () => {
     <main className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
       <div className="mx-auto max-w-6xl px-4 pb-20 pt-28">
         <Link
-          to="/#projects"
+          to="/projects"
           className="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-pink-300 transition-colors"
         >
           <FaArrowLeft aria-hidden="true" />
