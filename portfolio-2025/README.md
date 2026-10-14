@@ -43,5 +43,6 @@ The Download CV buttons point at `public/Steve-Suico-CV.pdf`. Add that file to e
 
 | Path | Page |
 | --- | --- |
-| `/` | Home, with section hashes `#about`, `#services`, `#experience`, `#education`, `#projects`, `#contact` |
+| `/` | Home |
+| `/about`, `/services`, `/experience`, `/education`, `/projects`, `/contributions`, `/contact` | The same page, scrolled to that section |
 | `/projects/:slug` | Case study |
