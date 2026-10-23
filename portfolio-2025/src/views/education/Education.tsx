@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaCalendarAlt, FaGraduationCap, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import Reveal from '@/components/ui/Reveal';
+import Section from '@/components/ui/Section';
+import TimelineRow from '@/components/ui/TimelineRow';
 
 const education = [
   {
@@ -40,31 +42,17 @@ const education = [
   },
 ];
 
-const EducationCard = ({
-  school,
-  degree,
-  period,
-  location,
-}: {
-  school: string;
-  degree: string;
-  period: string;
-  location: string;
-}) => (
-  <article className="rounded-xl border border-gray-700/50 bg-gray-800/60 p-5">
-    <h3 className="text-lg font-bold text-white">{school}</h3>
-    <p className="mt-1 text-sm font-medium text-pink-400">{degree}</p>
-    <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
-      <span className="flex items-center gap-1.5">
-        <FaCalendarAlt className="text-gray-500" aria-hidden="true" />
-        {period}
-      </span>
-      <span className="flex items-center gap-1.5">
-        <FaMapMarkerAlt className="text-gray-500" aria-hidden="true" />
-        {location}
-      </span>
-    </div>
-  </article>
+type Entry = (typeof education)[number];
+
+const EducationRow = ({ item }: { item: Entry }) => (
+  <TimelineRow period={item.period}>
+    <h3 className="text-lg font-semibold text-white">{item.school}</h3>
+    <p className="text-sm font-medium text-pink-300">{item.degree}</p>
+    <p className="mt-2 flex items-center gap-1.5 text-xs text-muted">
+      <FaMapMarkerAlt aria-hidden="true" />
+      {item.location}
+    </p>
+  </TimelineRow>
 );
 
 const Education = () => {
@@ -73,59 +61,33 @@ const Education = () => {
   const earlier = education.filter((item) => item.earlier);
 
   return (
-    <section id="education" className="scroll-mt-20 w-full bg-gradient-to-b from-black to-gray-900 py-20 text-white">
-      <div className="mx-auto max-w-5xl px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-12 text-center"
-        >
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <FaGraduationCap className="text-3xl text-pink-500" aria-hidden="true" />
-            <h2 className="text-4xl font-bold">Education</h2>
-          </div>
-          <p className="text-gray-300">Information Technology, studied in Cebu.</p>
-        </motion.div>
-
-        <div className="grid gap-4 md:grid-cols-2">
+    <Section
+      id="education"
+      index={5}
+      label="education"
+      title="Where I studied"
+      highlight="studied"
+      description="Information Technology, studied in Cebu."
+      layout="split"
+    >
+      <Reveal>
+        <ul className="focus-list">
           {degrees.map((item) => (
-            <EducationCard
-              key={`${item.school}-${item.period}`}
-              school={item.school}
-              degree={item.degree}
-              period={item.period}
-              location={item.location}
-            />
+            <EducationRow key={`${item.school}-${item.period}`} item={item} />
           ))}
-        </div>
-
-        <div className="mt-6">
-          <button
-            type="button"
-            onClick={() => setShowEarlier((open) => !open)}
-            aria-expanded={showEarlier}
-            className="text-sm font-medium text-pink-400 hover:text-pink-300 transition-colors"
-          >
-            {showEarlier ? 'Hide earlier education' : 'Show earlier education'}
-          </button>
-          {showEarlier && (
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              {earlier.map((item) => (
-                <EducationCard
-                  key={`${item.school}-${item.period}`}
-                  school={item.school}
-                  degree={item.degree}
-                  period={item.period}
-                  location={item.location}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
+          {showEarlier &&
+            earlier.map((item) => <EducationRow key={`${item.school}-${item.period}`} item={item} />)}
+        </ul>
+        <button
+          type="button"
+          onClick={() => setShowEarlier((open) => !open)}
+          aria-expanded={showEarlier}
+          className="mt-3 text-sm font-medium text-pink-300 transition-colors hover:text-pink-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink-300"
+        >
+          {showEarlier ? 'Hide earlier education' : 'Show earlier education'}
+        </button>
+      </Reveal>
+    </Section>
   );
 };
 
