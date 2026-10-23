@@ -1,18 +1,27 @@
-import { motion } from 'framer-motion';
-import { 
-  FaReact, FaNodeJs, FaDocker, FaFigma, FaPython 
-} from 'react-icons/fa';
-import { 
-  SiNextdotjs, SiVite, SiTailwindcss, SiStorybook, 
-  SiFastapi, SiPostman, SiGooglecloud, SiVercel, 
-  SiZapier, SiSass, SiRailway, SiGoogleappsscript
+import type { ReactNode } from 'react';
+import { FaDocker, FaFigma, FaNodeJs, FaPython, FaReact } from 'react-icons/fa';
+import {
+  SiFastapi,
+  SiGoogleappsscript,
+  SiGooglecloud,
+  SiNextdotjs,
+  SiPostman,
+  SiRailway,
+  SiSass,
+  SiStorybook,
+  SiTailwindcss,
+  SiVercel,
+  SiVite,
+  SiZapier,
 } from 'react-icons/si';
 import { TbBrandFramerMotion } from 'react-icons/tb';
 
-const skillCategories = [
+type SkillItem = string | { name: string; icon: ReactNode };
+
+const skillCategories: { title: string; dot: string; items: SkillItem[] }[] = [
   {
-    title: 'Core Competencies',
-    color: 'from-pink-500 to-rose-500',
+    title: 'Core',
+    dot: 'bg-pink-500',
     items: [
       'Full-Stack Development (Frontend-focused)',
       'UI/UX Design & Prototyping',
@@ -20,11 +29,11 @@ const skillCategories = [
       'Cloud Infrastructure',
       'Workflow Automation',
       'CI/CD & Monitoring',
-    ]
+    ],
   },
   {
-    title: 'Frontend Technologies',
-    color: 'from-blue-500 to-cyan-500',
+    title: 'Frontend',
+    dot: 'bg-sky-400',
     items: [
       { name: 'ReactJS', icon: <FaReact /> },
       { name: 'NextJS', icon: <SiNextdotjs /> },
@@ -34,11 +43,11 @@ const skillCategories = [
       { name: 'PugJS', icon: null },
       { name: 'SASS', icon: <SiSass /> },
       { name: 'Storybook', icon: <SiStorybook /> },
-    ]
+    ],
   },
   {
-    title: 'Backend & Tools',
-    color: 'from-green-500 to-emerald-500',
+    title: 'Backend & tools',
+    dot: 'bg-emerald-400',
     items: [
       { name: 'Node.js', icon: <FaNodeJs /> },
       { name: 'Python', icon: <FaPython /> },
@@ -49,11 +58,11 @@ const skillCategories = [
       { name: 'Zapier', icon: <SiZapier /> },
       { name: 'Google Apps Script', icon: <SiGoogleappsscript /> },
       { name: 'Postman', icon: <SiPostman /> },
-    ]
+    ],
   },
   {
-    title: 'Cloud & Data',
-    color: 'from-purple-500 to-violet-500',
+    title: 'Cloud & data',
+    dot: 'bg-violet-400',
     items: [
       { name: 'GCP', icon: <SiGooglecloud /> },
       { name: 'Cloud Run', icon: <SiGooglecloud /> },
@@ -63,47 +72,40 @@ const skillCategories = [
       { name: 'Cloud Build', icon: <SiGooglecloud /> },
       { name: 'Vercel', icon: <SiVercel /> },
       { name: 'Railway', icon: <SiRailway /> },
-    ]
+    ],
   },
 ];
 
-const Skills = () => {
-  return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 px-2 py-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
-        {skillCategories.map((category, catIndex) => (
-          <motion.div
-            key={category.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: catIndex * 0.1 }}
-            className="bg-gray-800/60 backdrop-blur-sm rounded-xl p-5 border border-gray-700/50"
-          >
-            <h3 className={`text-lg font-bold mb-3 bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}>
-              {category.title}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {category.items.map((item, index) => {
-                const isString = typeof item === 'string';
-                const name = isString ? item : item.name;
-                const icon = isString ? null : item.icon;
-                return (
-                  <motion.span
-                    key={index}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full text-sm text-gray-300 hover:text-white hover:bg-gray-600/50 transition-colors cursor-default"
-                  >
-                    {icon && <span className="text-base">{icon}</span>}
-                    {name}
-                  </motion.span>
-                );
-              })}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  )
-}
+const Skills = () => (
+  <ul className="divide-y divide-line border-y border-line">
+    {skillCategories.map((category) => (
+      <li key={category.title} className="grid gap-3 py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
+        <h4 className="eyebrow flex items-center gap-2 pt-1">
+          <span className={`h-1.5 w-1.5 rounded-full ${category.dot}`} aria-hidden="true" />
+          {category.title}
+        </h4>
+        <ul className="flex flex-wrap gap-2">
+          {category.items.map((item) => {
+            const name = typeof item === 'string' ? item : item.name;
+            const icon = typeof item === 'string' ? null : item.icon;
+            return (
+              <li
+                key={name}
+                className="chip chip-neutral transition-colors hover:bg-pink-500/15 hover:text-pink-100"
+              >
+                {icon && (
+                  <span className="text-sm text-pink-300" aria-hidden="true">
+                    {icon}
+                  </span>
+                )}
+                {name}
+              </li>
+            );
+          })}
+        </ul>
+      </li>
+    ))}
+  </ul>
+);
 
-export default Skills
+export default Skills;
