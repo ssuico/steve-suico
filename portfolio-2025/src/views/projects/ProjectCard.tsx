@@ -1,65 +1,82 @@
 import { Link } from 'react-router-dom';
-import { FaExternalLinkAlt, FaLock } from 'react-icons/fa';
+import { FaArrowRight, FaExternalLinkAlt, FaLock } from 'react-icons/fa';
+import SpotlightCard from '@/components/ui/SpotlightCard';
 import { categoryLabels } from '@/data/projects';
 import type { Project } from '@/data/projects';
 
 interface ProjectCardProps {
   project: Project;
+  index: number;
+  /** Wide layout that fills the row when the grid would leave an orphan. */
+  featured?: boolean;
 }
 
-const ProjectCard = ({ project }: ProjectCardProps) => {
-  const tech = project.tech.slice(0, 4);
+const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => {
+  const tech = project.tech.slice(0, featured ? 6 : 4);
+  const caseStudy = `/projects/${project.slug}`;
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-700/50 bg-gray-800/60 shadow-lg transition-colors hover:border-pink-500/30">
-      <Link to={`/projects/${project.slug}`} aria-label={project.title} className="relative block aspect-video bg-gray-900">
+    <SpotlightCard className={`group flex h-full flex-col ${featured ? 'md:col-span-2 md:flex-row' : ''}`}>
+      <div
+        className={`relative aspect-video overflow-hidden bg-surface-2 ${featured ? 'md:aspect-auto md:w-[55%]' : ''}`}
+        aria-hidden="true"
+      >
         {project.cover ? (
           <img
             src={project.cover}
             alt=""
-            className="h-full w-full object-cover"
+            loading="lazy"
+            className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="flex h-full items-end bg-gradient-to-br from-pink-500/25 via-gray-900 to-purple-500/20 p-5">
-            <span className="text-xs font-semibold uppercase tracking-widest text-pink-200" aria-hidden="true">
-              {categoryLabels[project.category]}
-            </span>
+          <div className="flex h-full min-h-48 items-end bg-gradient-to-br from-pink-500/25 via-surface to-violet-500/20 p-5">
+            <span className="eyebrow text-pink-200">{categoryLabels[project.category]}</span>
           </div>
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs text-pink-200" aria-hidden="true">
-          {categoryLabels[project.category]}
-        </span>
-      </Link>
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-surface to-transparent" />
+      </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-xl font-bold text-white">
-          <Link to={`/projects/${project.slug}`} className="hover:text-pink-300 transition-colors">
+      <div className="flex flex-1 flex-col p-6">
+        <p className="eyebrow flex items-center justify-between">
+          <span>
+            <span className="text-pink-400">{String(index + 1).padStart(2, '0')}</span> ·{' '}
+            {categoryLabels[project.category]}
+          </span>
+          <span>{project.year}</span>
+        </p>
+
+        <h3 className="mt-3 text-xl font-semibold text-white">
+          <Link
+            to={caseStudy}
+            className="after:absolute after:inset-0 after:z-0 after:content-[''] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink-300"
+          >
             {project.title}
           </Link>
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-gray-300 line-clamp-3">{project.tagline}</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-3">{project.tagline}</p>
 
-        <ul className="mt-4 flex flex-wrap gap-2">
+        <ul className="mt-5 flex flex-wrap gap-2">
           {tech.map((item) => (
-            <li key={item} className="rounded-full bg-gray-700/50 px-2.5 py-1 text-xs text-gray-300">
+            <li key={item} className="chip">
               {item}
             </li>
           ))}
         </ul>
 
-        <div className="mt-auto flex items-center gap-4 pt-5 text-sm">
-          <Link
-            to={`/projects/${project.slug}`}
-            className="font-medium text-pink-400 hover:text-pink-300 transition-colors"
+        <div className="mt-auto flex items-center justify-between gap-4 pt-6 text-sm">
+          <span
+            className="inline-flex items-center gap-2 font-medium text-pink-300 transition-colors group-hover:text-pink-200"
+            aria-hidden="true"
           >
             View case study
-          </Link>
+            <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
+          </span>
           {project.links.live ? (
             <a
               href={project.links.live}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors"
+              className="relative z-10 inline-flex items-center gap-1.5 text-muted transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink-300"
             >
               <FaExternalLinkAlt className="text-xs" aria-hidden="true" />
               Live site
@@ -72,7 +89,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           ) : null}
         </div>
       </div>
-    </article>
+    </SpotlightCard>
   );
 };
 
