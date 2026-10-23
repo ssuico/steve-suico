@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes, useParams } from 'react-router-dom';
 import SectionRoute from '@/components/SectionRoute';
+import ScrollProgress from '@/components/ui/ScrollProgress';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { sectionFromPath } from '@/data/site';
 import Footer from '@/layout/Footer';
@@ -11,7 +12,7 @@ import NotFound from '@/views/NotFound';
 const ProjectDetail = lazy(() => import('@/views/projects/ProjectDetail'));
 
 const PageFallback = () => (
-  <div className="min-h-screen bg-black text-gray-400 flex items-center justify-center">
+  <div className="flex min-h-screen items-center justify-center font-mono text-sm text-muted">
     Loading…
   </div>
 );
@@ -24,7 +25,8 @@ function SectionPage() {
 
 function App() {
   return (
-    <div className="w-full min-h-screen flex flex-col bg-black">
+    <div className="flex min-h-screen w-full flex-col">
+      <ScrollProgress />
       <SectionRoute />
       <Navbar />
       <Suspense fallback={<PageFallback />}>

@@ -63,15 +63,15 @@ const Navbar = () => {
           isOpen ? 'rounded-3xl' : 'rounded-full'
         } ${
           solid
-            ? 'border-gray-800 bg-[#131417]/90 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-md'
-            : 'border-white/10 bg-black/35 backdrop-blur-md'
+            ? 'border-line bg-ink/85 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-md'
+            : 'border-white/10 bg-ink/40 backdrop-blur-md'
         }`}
       >
         <div className="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
           <Link
             to="/"
             onClick={(event) => followSection(event, '/')}
-            className="shrink-0 rounded-full px-2 py-1 text-lg font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
+            className="shrink-0 rounded-full px-2 py-1 font-display text-lg font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
           >
             Steve<span className="text-pink-500">Suico</span>
           </Link>
@@ -97,7 +97,12 @@ const Navbar = () => {
                         transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
                       />
                     )}
-                    <span className="relative">{link.name}</span>
+                    <span className="relative flex items-baseline gap-1.5">
+                      <span className="font-mono text-[10px] text-pink-400/70">
+                        {String(link.number).padStart(2, '0')}
+                      </span>
+                      {link.name}
+                    </span>
                   </Link>
                 );
               })}
@@ -144,7 +149,12 @@ const Navbar = () => {
                           transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
                         />
                       )}
-                      <span className="relative">{link.name}</span>
+                      <span className="relative flex items-baseline gap-2">
+                        <span className="font-mono text-[10px] text-pink-400/70">
+                          {String(link.number).padStart(2, '0')}
+                        </span>
+                        {link.name}
+                      </span>
                     </Link>
                   );
                 })}

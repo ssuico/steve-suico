@@ -9,13 +9,13 @@ import Services from '@/views/services/Services'
 
 const Layout = () => {
   return (
-    <div className="w-full flex flex-col bg-black">
+    <div className="flex w-full flex-col">
       <Home />
       <About />
       <Services />
+      <Projects />
       <Experience />
       <Education />
-      <Projects />
       <Contributions />
       <Contact />
     </div>

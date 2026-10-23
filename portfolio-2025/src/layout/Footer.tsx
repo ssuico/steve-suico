@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaTwitter } from 'react-icons/fa';
-import { footerLinks, site } from '@/data/site';
+import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { site } from '@/data/site';
 
 const socials = [
   { label: 'GitHub', icon: FaGithub, href: site.github },
@@ -12,69 +12,32 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-black border-t border-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="text-2xl font-bold text-white mb-3">
-              Steve<span className="text-pink-500">Suico</span>
-            </h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Software Developer specializing in full-stack web applications, cloud infrastructure, and AI-driven workflows.
-            </p>
-            <p className="mt-3 text-sm text-pink-300">{site.availability}</p>
-          </div>
-
-          <div>
-            <h4 className="text-white font-semibold mb-3">Quick Links</h4>
-            <ul className="space-y-2">
-              {footerLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 text-sm hover:text-pink-400 transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-semibold mb-3">Get In Touch</h4>
-            <div className="space-y-2 text-sm text-gray-400">
-              <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-pink-400 transition-colors">
-                <FaEnvelope className="text-pink-500" />
-                {site.email}
-              </a>
-              <a href={site.phoneHref} className="flex items-center gap-2 hover:text-pink-400 transition-colors">
-                <FaPhone className="text-pink-500" />
-                {site.phoneDisplay}
-              </a>
-            </div>
-            <div className="flex gap-4 mt-4">
-              {socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="text-lg text-gray-400 hover:text-white transition-colors"
-                >
-                  <social.icon />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-800 pt-6 text-center">
-          <p className="text-gray-500 text-sm">
-            © {currentYear} Steve Bryan L. Suico Jr. Built with React and Tailwind CSS.
+    <footer className="w-full border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-5 py-8 sm:flex-row">
+        <div className="text-center sm:text-left">
+          <Link to="/" className="font-display text-lg font-bold text-white">
+            Steve<span className="text-pink-500">Suico</span>
+          </Link>
+          <p className="mt-1 font-mono text-xs text-muted">
+            © {currentYear} Steve Bryan L. Suico Jr. · Built with React and Tailwind CSS.
           </p>
         </div>
+
+        <ul className="flex items-center gap-3">
+          {socials.map((social) => (
+            <li key={social.label}>
+              <a
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted transition-colors hover:border-pink-500/50 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
+              >
+                <social.icon />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
   );
