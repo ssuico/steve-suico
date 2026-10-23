@@ -1,7 +1,7 @@
-import agoraCover from '../assets/projects/agora-login.png';
+import agoraCover from '../assets/projects/agora-login.webp';
 import astraeusCover from '../assets/projects/astraeus.webp';
-import delosCover from '../assets/projects/delos-login.png';
-import obseronCover from '../assets/projects/obseron-prod.png';
+import delosCover from '../assets/projects/delos-login.webp';
+import obseronCover from '../assets/projects/obseron-prod.webp';
 
 export type ProjectCategory = 'client' | 'personal' | 'work';
 
