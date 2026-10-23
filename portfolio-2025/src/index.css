@@ -1,30 +1,217 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --color-ink: #09090d;
+  --color-surface: #101017;
+  --color-surface-2: #161621;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-muted: #9a9aae;
+
+  --animate-marquee: marquee 48s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+html {
+  background-color: var(--color-ink);
+  color-scheme: dark;
+}
+
 body {
-  background-color: #131417;
-  color: #e5e5e5;
+  background-color: var(--color-ink);
+  color: #e6e6ef;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-@keyframes project-cycle {
-  from {
-    transform: scaleX(0);
+/* One ambient backdrop for the whole page: a soft glow and a faint dot grid. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 12% -8%, rgb(236 72 153 / 0.14), transparent 60%),
+    radial-gradient(48rem 36rem at 100% 8%, rgb(34 211 238 / 0.08), transparent 60%),
+    radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.05) 1px, transparent 0);
+  background-size: auto, auto, 28px 28px;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}
+
+::selection {
+  background: rgb(236 72 153 / 0.35);
+  color: #fff;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+@layer components {
+  /* Small tinted pill, used for tech everywhere. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    background: rgb(236 72 153 / 0.1);
+    padding: 0.25rem 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.25rem;
+    color: #fbcfe8;
   }
-  to {
-    transform: scaleX(1);
+
+  .chip-neutral {
+    background: rgb(255 255 255 / 0.05);
+    color: #c9c9d6;
+  }
+
+  /* The mono label used above titles, dates and counts. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .card {
+    position: relative;
+    border-radius: 1rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+
+  /* Cursor-following highlight. Position is set by SpotlightCard. */
+  .spotlight {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      22rem circle at var(--mx, 50%) var(--my, 50%),
+      rgb(236 72 153 / 0.14),
+      transparent 60%
+    );
+  }
+
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid #f9a8d4;
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    background: #ec4899;
+    color: #fff;
+    box-shadow: 0 10px 30px -10px rgb(236 72 153 / 0.7);
+  }
+
+  .btn-primary:hover {
+    background: #db2777;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgb(255 255 255 / 0.14);
+    color: #e6e6ef;
+  }
+
+  .btn-outline:hover {
+    border-color: rgb(236 72 153 / 0.6);
+    color: #fbcfe8;
+  }
+
+  .field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--color-surface);
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    color: #fff;
+    transition: border-color 0.2s ease;
+  }
+
+  .field::placeholder {
+    color: #6c6c80;
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: #ec4899;
+    box-shadow: 0 0 0 3px rgb(236 72 153 / 0.18);
   }
 }
 
-.project-cycle {
-  transform-origin: left center;
-  animation: project-cycle 4s linear forwards;
-}
+/* Hover one row, the rest recede. Only on devices that can hover. */
+@media (hover: hover) {
+  .focus-list > li {
+    transition: opacity 0.25s ease;
+  }
 
-.project-cycle[data-paused='true'] {
-  animation-play-state: paused;
+  .focus-list:hover > li:not(:hover):not(:focus-within) {
+    opacity: 0.5;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-cycle {
-    animation: none;
+  .motion-marquee {
+    animation: none !important;
   }
 }
