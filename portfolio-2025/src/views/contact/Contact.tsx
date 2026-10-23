@@ -1,8 +1,15 @@
-import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaTwitter } from 'react-icons/fa';
+import { FaCheck, FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaRegCopy, FaTwitter } from 'react-icons/fa';
 import emailjs from 'emailjs-com';
+import Reveal from '@/components/ui/Reveal';
+import Section from '@/components/ui/Section';
 import { site } from '@/data/site';
+
+const socials = [
+  { label: 'GitHub', href: site.github, icon: FaGithub },
+  { label: 'LinkedIn', href: site.linkedin, icon: FaLinkedin },
+  { label: 'X', href: site.twitter, icon: FaTwitter },
+];
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +21,17 @@ const Contact = () => {
   const [status, setStatus] = useState<'success' | 'error' | null>(null);
   const [statusMessage, setStatusMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(site.email);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${site.email}`;
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,90 +88,94 @@ const Contact = () => {
     });
   };
 
-  return (
-    <section id="contact" className="scroll-mt-20 w-full bg-gradient-to-b from-gray-900 to-black py-20 text-white">
-      <div className="mx-auto max-w-6xl px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
+  const methods = (
+    <div className="space-y-3">
+      <div className="card flex items-center justify-between gap-3 p-4">
+        <a href={`mailto:${site.email}`} className="group flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-300">
+            <FaEnvelope aria-hidden="true" />
+          </span>
+          <span className="min-w-0">
+            <span className="eyebrow block">Email</span>
+            <span className="block truncate text-sm text-white group-hover:text-pink-200">{site.email}</span>
+          </span>
+        </a>
+        <button
+          type="button"
+          onClick={copyEmail}
+          title={copied ? 'Copied' : 'Copy email'}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line text-sm text-muted transition-colors hover:border-pink-500/50 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
         >
-          <h2 className="mb-4 text-4xl font-bold">Get In Touch</h2>
-          <p className="text-gray-300">Tell me about the product, the deadline, and what done looks like.</p>
-          <p className="mt-2 text-sm text-gray-400">{site.replyTime}</p>
-        </motion.div>
+          {copied ? <FaCheck aria-hidden="true" className="text-emerald-400" /> : <FaRegCopy aria-hidden="true" />}
+          <span className="sr-only">{copied ? 'Copied' : 'Copy email'}</span>
+        </button>
+      </div>
+      <span className="sr-only" role="status">
+        {copied ? 'Email address copied' : ''}
+      </span>
 
-        <div className="grid gap-12 md:grid-cols-2">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <h3 className="mb-6 text-2xl font-semibold">Contact Information</h3>
-            <p className="text-gray-300">
-              I take freelance work and full-time roles. If you have a web app, a dashboard, or a pipeline that needs an owner, send a note.
-            </p>
+      <a href={site.phoneHref} className="card group flex items-center gap-3 p-4">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-300">
+          <FaPhone aria-hidden="true" />
+        </span>
+        <span>
+          <span className="eyebrow block">Phone</span>
+          <span className="block text-sm text-white group-hover:text-pink-200">{site.phoneDisplay}</span>
+        </span>
+      </a>
 
-            <div className="space-y-4">
-              <a href={`mailto:${site.email}`} className="group flex items-center gap-3 text-gray-300 transition-colors hover:text-pink-400">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors group-hover:bg-pink-500/20">
-                  <FaEnvelope className="text-pink-500" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Email</p>
-                  <p className="text-sm">{site.email}</p>
-                </div>
-              </a>
-              <a href={site.phoneHref} className="group flex items-center gap-3 text-gray-300 transition-colors hover:text-pink-400">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors group-hover:bg-pink-500/20">
-                  <FaPhone className="text-pink-500" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Phone</p>
-                  <p className="text-sm">{site.phoneDisplay}</p>
-                </div>
-              </a>
-            </div>
+      <ul className="flex gap-3 pt-2">
+        {socials.map((social) => (
+          <li key={social.label}>
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.label}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-lg text-muted transition-colors hover:border-pink-500/50 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-300"
+            >
+              <social.icon />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 
-            <div className="flex space-x-6">
-              <a href={site.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-2xl text-gray-400 transition-colors hover:text-white">
-                <FaGithub />
-              </a>
-              <a href={site.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-2xl text-gray-400 transition-colors hover:text-white">
-                <FaLinkedin />
-              </a>
-              <a href={site.twitter} target="_blank" rel="noopener noreferrer" aria-label="X" className="text-2xl text-gray-400 transition-colors hover:text-white">
-                <FaTwitter />
-              </a>
-            </div>
-          </motion.div>
+  return (
+    <Section
+      id="contact"
+      index={7}
+      label="contact"
+      title="Let's work together"
+      highlight="together"
+      description={
+        <>
+          Tell me about the product, the deadline, and what done looks like. I take freelance work and full-time
+          roles. <span className="text-white">{site.replyTime}</span>
+        </>
+      }
+      aside={methods}
+      layout="split"
+    >
+      <Reveal>
+        <form onSubmit={handleSubmit} className="card relative space-y-5 p-6 sm:p-8">
+          <div className="sr-only" aria-hidden="true">
+            <label htmlFor="company">Company</label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
 
-          <motion.form
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            onSubmit={handleSubmit}
-            className="relative space-y-6"
-          >
-            <div className="sr-only" aria-hidden="true">
-              <label htmlFor="company">Company</label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                value={formData.company}
-                onChange={handleChange}
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </div>
+          <div className="grid gap-5 sm:grid-cols-2">
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium">
+              <label htmlFor="name" className="eyebrow mb-2 block">
                 Name
               </label>
               <input
@@ -162,12 +184,14 @@ const Contact = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
+                autoComplete="name"
+                placeholder="Your name"
+                className="field"
                 required
               />
             </div>
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium">
+              <label htmlFor="email" className="eyebrow mb-2 block">
                 Email
               </label>
               <input
@@ -176,43 +200,44 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
+                autoComplete="email"
+                placeholder="you@company.com"
+                className="field"
                 required
               />
             </div>
-            <div>
-              <label htmlFor="message" className="mb-2 block text-sm font-medium">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 focus:border-pink-500 focus:outline-none"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-pink-500 py-3 font-medium text-white transition-colors hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-70"
-              disabled={loading}
+          </div>
+
+          <div>
+            <label htmlFor="message" className="eyebrow mb-2 block">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={6}
+              placeholder="What are you building?"
+              className="field resize-y"
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-70" disabled={loading}>
+            {loading ? 'Sending...' : 'Send message'}
+          </button>
+          {status && (
+            <p
+              className={`text-center text-sm ${status === 'error' ? 'text-red-400' : 'text-emerald-400'}`}
+              role={status === 'error' ? 'alert' : 'status'}
             >
-              {loading ? 'Sending...' : 'Send Message'}
-            </button>
-            {status && (
-              <p
-                className={`text-center text-sm ${status === 'error' ? 'text-red-400' : 'text-green-400'}`}
-                role={status === 'error' ? 'alert' : 'status'}
-              >
-                {statusMessage}
-              </p>
-            )}
-          </motion.form>
-        </div>
-      </div>
-    </section>
+              {statusMessage}
+            </p>
+          )}
+        </form>
+      </Reveal>
+    </Section>
   );
 };
 
