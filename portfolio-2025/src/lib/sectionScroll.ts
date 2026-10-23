@@ -1,15 +1,22 @@
 const NAV_OFFSET = 80;
 
+let skipScrollPath = '';
 let skipScrollUntil = 0;
 let spyLockedUntil = 0;
 let scrollJob = 0;
 
-export function skipNextSectionScroll() {
-  skipScrollUntil = performance.now() + 80;
+// The scroll spy changes the path to match what is on screen. That path change must not
+// scroll the page again. The skip is tied to the path it was set for, not to a short timer,
+// so a slow render cannot let the scroll through.
+export function skipNextSectionScroll(path: string) {
+  skipScrollPath = path;
+  skipScrollUntil = performance.now() + 1500;
 }
 
-export function shouldSkipSectionScroll() {
-  return performance.now() < skipScrollUntil;
+export function shouldSkipSectionScroll(path: string) {
+  if (skipScrollPath !== path || performance.now() >= skipScrollUntil) return false;
+  skipScrollPath = '';
+  return true;
 }
 
 export function sectionSpyLocked() {

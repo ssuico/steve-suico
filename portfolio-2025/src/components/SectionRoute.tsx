@@ -33,7 +33,7 @@ const SectionRoute = () => {
     }
 
     const section = sectionFromPath(pathname);
-    if (shouldSkipSectionScroll()) return;
+    if (shouldSkipSectionScroll(pathname)) return;
     if (!section) {
       window.scrollTo({ top: 0, behavior: 'auto' });
       return;
@@ -49,34 +49,27 @@ const SectionRoute = () => {
   useEffect(() => {
     if (!tracking) return;
 
-    const ratios = new Map<string, number>();
+    // A thin band at 35% of the viewport height. Sections are far taller than the band, so
+    // intersection ratio is useless; the band only wakes the callback when a section edge
+    // crosses it, and the active section is then read from geometry.
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (sectionSpyLocked()) {
-          ratios.clear();
-          return;
-        }
+      () => {
+        if (sectionSpyLocked()) return;
 
-        entries.forEach((entry) => {
-          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
-        });
-
+        const line = window.innerHeight * 0.35;
         let bestId = '';
-        let bestRatio = 0;
-        ratios.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
+        for (const section of pageSections) {
+          const element = document.getElementById(section.id);
+          if (element && element.getBoundingClientRect().top <= line) bestId = section.id;
+        }
 
         const next = pageSections.find((section) => section.id === bestId);
         if (!next || next.path === window.location.pathname) return;
 
-        skipNextSectionScroll();
+        skipNextSectionScroll(next.path);
         navigate(next.path, { replace: true });
       },
-      { rootMargin: '-80px 0px -70% 0px', threshold: [0.15, 0.35, 0.6] },
+      { rootMargin: '-35% 0px -64% 0px', threshold: 0 },
     );
 
     pageSections.forEach((section) => {
