@@ -25,6 +25,8 @@ export interface Project {
   outcomes: string[];
   tech: string[];
   cover?: string;
+  /** Drawn cover for projects with no screenshot. A `cover` image wins if both are set. */
+  art?: 'amazon-pipeline';
   gallery: string[];
   links: ProjectLinks;
   featured: boolean;
@@ -193,6 +195,7 @@ export const projects: Project[] = [
       'Releases go out through Cloud Build instead of a manual server update',
     ],
     tech: ['FastAPI', 'Python', 'GCP', 'BigQuery', 'Docker', 'Cloud Build', 'SP-API', 'Ads API'],
+    art: 'amazon-pipeline',
     gallery: [],
     links: { isPrivate: true },
     featured: false,

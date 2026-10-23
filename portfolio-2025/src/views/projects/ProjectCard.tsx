@@ -3,6 +3,7 @@ import { FaArrowRight, FaExternalLinkAlt, FaLock } from 'react-icons/fa';
 import SpotlightCard from '@/components/ui/SpotlightCard';
 import { categoryLabels } from '@/data/projects';
 import type { Project } from '@/data/projects';
+import ProjectArt from './ProjectArt';
 
 interface ProjectCardProps {
   project: Project;
@@ -21,19 +22,10 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
         className={`relative aspect-video overflow-hidden bg-surface-2 ${featured ? 'md:aspect-auto md:w-[55%]' : ''}`}
         aria-hidden="true"
       >
-        {project.cover ? (
-          <img
-            src={project.cover}
-            alt=""
-            loading="lazy"
-            className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className="flex h-full min-h-48 items-end bg-gradient-to-br from-pink-500/25 via-surface to-violet-500/20 p-5">
-            <span className="eyebrow text-pink-200">{categoryLabels[project.category]}</span>
-          </div>
+        <ProjectArt project={project} variant="card" />
+        {!project.art && (
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-surface to-transparent" />
         )}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-surface to-transparent" />
       </div>
 
       <div className="flex flex-1 flex-col p-6">

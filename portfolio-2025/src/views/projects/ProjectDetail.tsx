@@ -4,6 +4,7 @@ import Reveal from '@/components/ui/Reveal';
 import { categoryLabels, getAdjacentProjects, getProject } from '@/data/projects';
 import { site } from '@/data/site';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import ProjectArt from './ProjectArt';
 
 const Heading = ({ children }: { children: string }) => (
   <h2 className="eyebrow mb-3 flex items-center gap-2 text-pink-400">
@@ -53,19 +54,7 @@ const ProjectDetail = () => {
         </header>
 
         <Reveal className="card mt-10 overflow-hidden">
-          {project.cover ? (
-            <img
-              src={project.cover}
-              alt={`${project.title} cover`}
-              width={1400}
-              height={788}
-              className="max-h-[480px] w-full object-cover object-top"
-            />
-          ) : (
-            <div className="flex h-56 items-end bg-gradient-to-br from-pink-500/25 via-surface to-violet-500/20 p-8">
-              <p className="eyebrow text-pink-200">{categoryLabels[project.category]} · Private engagement</p>
-            </div>
-          )}
+          <ProjectArt project={project} variant="banner" />
         </Reveal>
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
