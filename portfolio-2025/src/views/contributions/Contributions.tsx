@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import Reveal from '@/components/ui/Reveal';
+import Section from '@/components/ui/Section';
 import { site } from '@/data/site';
 
 type ContributionLevel =
@@ -23,7 +24,7 @@ type ContributionCalendar = {
 };
 
 const levelClass: Record<ContributionLevel, string> = {
-  NONE: 'bg-gray-800',
+  NONE: 'bg-white/[0.06]',
   FIRST_QUARTILE: 'bg-pink-900',
   SECOND_QUARTILE: 'bg-pink-700',
   THIRD_QUARTILE: 'bg-pink-500',
@@ -118,28 +119,24 @@ const Contributions = () => {
   };
 
   return (
-    <section id="contributions" className="scroll-mt-20 w-full bg-black py-20 text-white">
-      <div className="mx-auto max-w-6xl px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-10 text-center"
-        >
-          <h2 className="mb-4 text-4xl font-bold">Contributions</h2>
-          <p className="mx-auto max-w-2xl text-gray-300">
-            {calendar
-              ? `${calendar.total.toLocaleString('en-US')} contributions in the last year.`
-              : 'A year of commits, pull requests, issues, and reviews.'}
-          </p>
-        </motion.div>
-
-        <div className="relative mx-auto w-fit max-w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 pb-4 pt-6">
+    <Section
+      id="contributions"
+      index={6}
+      label="contributions"
+      title="A year of shipping"
+      highlight="shipping"
+      description={
+        calendar
+          ? `${calendar.total.toLocaleString('en-US')} contributions in the last year.`
+          : 'A year of commits, pull requests, issues, and reviews.'
+      }
+    >
+      <Reveal>
+        <div className="card relative w-fit max-w-full px-4 pb-4 pt-6">
           {active && (
             <div
               role="tooltip"
-              className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] whitespace-nowrap rounded-md border border-gray-700 bg-gray-900 px-2.5 py-1 text-xs text-white shadow-lg"
+              className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] whitespace-nowrap rounded-md border border-gray-700 bg-surface-2 px-2.5 py-1 text-xs text-white shadow-lg"
               style={{ top: active.top, left: active.left }}
             >
               {active.label}
@@ -155,7 +152,7 @@ const Contributions = () => {
               .
             </p>
           ) : !calendar ? (
-            <div className="h-40 animate-pulse rounded-xl bg-gray-900" aria-hidden="true" />
+            <div className="h-40 animate-pulse rounded-xl bg-surface-2" aria-hidden="true" />
           ) : (
             <>
               <div ref={scrollerRef} className="overflow-x-auto pb-2" onScroll={() => setActive(null)}>
@@ -230,8 +227,8 @@ const Contributions = () => {
             </>
           )}
         </div>
-      </div>
-    </section>
+      </Reveal>
+    </Section>
   );
 };
 
