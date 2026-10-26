@@ -95,6 +95,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
+    server: {
+      port: 5173,
+      strictPort: true,
+    },
     plugins: [react(), tailwindcss(), contributionCalendarApi(env.GITHUB_TOKEN), contactApi(env)],
     resolve: {
       alias: {
