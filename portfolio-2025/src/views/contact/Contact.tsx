@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FaCheck, FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaRegCopy, FaTwitter } from 'react-icons/fa';
-import emailjs from 'emailjs-com';
 import Reveal from '@/components/ui/Reveal';
 import Section from '@/components/ui/Section';
 import { site } from '@/data/site';
@@ -33,52 +32,37 @@ const Contact = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus(null);
     setStatusMessage('');
+    setLoading(true);
 
-    if (formData.company.trim()) {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error || 'Failed to send message. Please try again later.');
+      }
+
       setStatus('success');
       setStatusMessage('Message sent successfully!');
       setFormData({ name: '', email: '', message: '', company: '' });
-      return;
-    }
-
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceId || !templateId || !publicKey) {
+    } catch (error) {
       setStatus('error');
-      setStatusMessage(`The form is not configured yet. Email me at ${site.email}.`);
-      return;
+      setStatusMessage(
+        error instanceof Error && error.message
+          ? `${error.message} You can also email me at ${site.email}.`
+          : `Failed to send message. You can also email me at ${site.email}.`,
+      );
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(true);
-    emailjs
-      .send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-        },
-        publicKey,
-      )
-      .then(() => {
-        setStatus('success');
-        setStatusMessage('Message sent successfully!');
-        setFormData({ name: '', email: '', message: '', company: '' });
-      })
-      .catch(() => {
-        setStatus('error');
-        setStatusMessage('Failed to send message. Please try again later.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
