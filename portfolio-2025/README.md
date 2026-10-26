@@ -17,15 +17,15 @@ Yarn 1 treats `yarn check` as its own integrity command, so the project pipeline
 
 ## Environment
 
-The contact form sends mail through EmailJS. Create `.env.local`:
+The contact form posts to `/api/contact`, which sends mail through Resend. Both `yarn dev` and Vercel serve that route. Create `.env` (or `.env.local`) and set the same variables in the Vercel project:
 
 ```bash
-VITE_EMAILJS_SERVICE_ID=
-VITE_EMAILJS_TEMPLATE_ID=
-VITE_EMAILJS_PUBLIC_KEY=
+RESEND_API_KEY=            # sending-only key restricted to mail.ssuico.com
+CONTACT_TO_EMAIL=          # where messages are delivered
+CONTACT_FROM_EMAIL=        # e.g. Portfolio Contact <contact@mail.ssuico.com>
 ```
 
-Without those values the form shows an error and asks visitors to email directly.
+`CONTACT_FROM_EMAIL` falls back to `onboarding@resend.dev`, which Resend only delivers to the account owner's address. Without `RESEND_API_KEY` and `CONTACT_TO_EMAIL` the form shows an error and asks visitors to email directly. See `design-log/2026-10-27-contact-form-resend.md`.
 
 ## Add a project
 
