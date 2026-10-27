@@ -52,7 +52,7 @@ const nodes: MainNode[] = [
     x: 316,
     y: BOTTOM_Y,
     role: 'API',
-    chips: ['python', 'pydantic', 'rest', 'cloudtasks'],
+    chips: ['python', 'pydantic', 'rest', 'cloudtasks', 'cloudscheduler'],
     maxRow: 300,
   },
   { id: 'bigquery', x: 592, y: BOTTOM_Y, role: 'data', chips: [] },

@@ -79,6 +79,7 @@ export const stack: StackItem[] = [
   { id: 'jwt', name: 'JWT', icon: SiJsonwebtokens, color: '#FB015B', group: 'backend', match: ['JWT'], note: 'auth tokens' },
   { id: 'pydantic', name: 'Pydantic', icon: SiPydantic, color: '#E92063', group: 'backend', match: ['Pydantic'], note: 'typed models' },
   { id: 'cloudtasks', name: 'Cloud Tasks', icon: SiGooglecloud, color: '#4285F4', group: 'cloud', match: ['Cloud Tasks'], note: 'job queues' },
+  { id: 'cloudscheduler', name: 'Cloud Scheduler', icon: SiGooglecloud, color: '#4285F4', group: 'cloud', match: ['Cloud Scheduler'], note: 'triggers the jobs' },
   { id: 'cloudbuild', name: 'Cloud Build', icon: SiGooglecloud, color: '#4285F4', group: 'cloud', match: ['Cloud Build'], note: 'builds and deploys' },
   { id: 'claude', name: 'Claude', icon: SiClaude, color: '#D97757', group: 'tools', match: ['Claude'], note: 'language model' },
   { id: 'vertexai', name: 'Vertex AI', icon: SiGooglecloud, color: '#4285F4', group: 'cloud', match: ['Vertex AI'], note: 'hosts the model' },
