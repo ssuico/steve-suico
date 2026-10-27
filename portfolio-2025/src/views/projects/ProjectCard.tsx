@@ -4,6 +4,7 @@ import SpotlightCard from '@/components/ui/SpotlightCard';
 import { categoryLabels } from '@/data/projects';
 import type { Project } from '@/data/projects';
 import ProjectArt from './ProjectArt';
+import TechChips from './TechChips';
 
 interface ProjectCardProps {
   project: Project;
@@ -13,7 +14,6 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => {
-  const tech = project.tech.slice(0, featured ? 6 : 4);
   const caseStudy = `/projects/${project.slug}`;
 
   return (
@@ -47,13 +47,7 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-3">{project.tagline}</p>
 
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {tech.map((item) => (
-            <li key={item} className="chip">
-              {item}
-            </li>
-          ))}
-        </ul>
+        <TechChips items={project.tech} className="mt-5" />
 
         <div className="mt-auto flex items-center justify-between gap-4 pt-6 text-sm">
           <span
