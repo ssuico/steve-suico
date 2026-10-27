@@ -25,7 +25,7 @@ export const services: Service[] = [
     pitch: 'Turn exports and third-party APIs into a view the business can check itself.',
     deliverables: [
       'Ingestion from Amazon SP-API, Vendor Central, and Ads API into BigQuery',
-      'Queued jobs with retries, and MERGE writes so a rerun does not duplicate rows',
+      'Scheduled and queued jobs with retries, and MERGE writes so a rerun does not duplicate rows',
       'Dashboards for report runs, price tracking, and brand analytics instead of a spreadsheet',
       'A VitePress docs site so the next developer can see how it works',
     ],
@@ -35,7 +35,7 @@ export const services: Service[] = [
     title: 'Cloud and DevOps',
     pitch: 'Get a service onto Google Cloud, Railway, or Vercel, and make the next release routine.',
     deliverables: [
-      'Cloud Run services, with BigQuery for the data and Cloud Tasks for job queues',
+      'Cloud Run services, with BigQuery for the data, Cloud Scheduler for triggers, and Cloud Tasks for job queues',
       'Each release shipped as one Docker image, built and deployed by Cloud Build',
       'Status endpoints and Cloud Logging, so a failed run is easy to find',
     ],
