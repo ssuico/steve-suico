@@ -174,7 +174,7 @@ export const projects: Project[] = [
     slug: 'agora',
     title: 'Agora',
     tagline: 'Ordering, pre-orders, and point of sale for neighborhood stores and stalls.',
-    category: 'work',
+    category: 'personal',
     year: '2026 – Present',
     role: 'Full-stack Developer',
     summary:
@@ -223,7 +223,7 @@ export const projects: Project[] = [
     title: 'Amazon API Data Platform',
     tagline: 'Amazon SP-API, Ads API, and Vendor Central data, ingested on a schedule into BigQuery and served to apps and agents.',
     category: 'work',
-    year: '2024 – Present',
+    year: '2025 – Present',
     role: 'Backend Developer',
     summary:
       'Internal platform at Channel Precision Inc. A FastAPI service on Google Cloud pulls seller, vendor, advertising, Marketing Cloud, and pricing data from Amazon for many brand accounts, lands it in BigQuery, and serves it through a REST API and an MCP server. A VitePress site documents how it works and how to run it.',
@@ -252,6 +252,7 @@ export const projects: Project[] = [
       'BigQuery',
       'Cloud Run',
       'Cloud Tasks',
+      'Cloud Scheduler',
       'Docker',
       'Cloud Build',
       'Pydantic',

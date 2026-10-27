@@ -32,7 +32,7 @@ const Projects = () => {
       label="projects"
       title="Selected work"
       highlight="work"
-      description="Client sites, internal platforms, and the systems behind them. Open a case study for the problem, the build, and the result."
+      description="Client sites, internal platforms, and side projects. Open a case study for the problem, the build, and the result."
     >
       <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="Filter projects">
         {filters
