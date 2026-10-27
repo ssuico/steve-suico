@@ -23,14 +23,27 @@ const experiences: Experience[] = [
     period: 'Nov 2024 – Present',
     current: true,
     highlights: [
-      'Managed and maintained Amazon API pipelines (SP-API & Ads API), ensuring reliable data ingestion and high-throughput processing.',
-      'Built a robust cloud-based data infrastructure using FastAPI and Google Cloud Platform to support company-wide analytics.',
-      'Developed a real-time monitoring dashboard using ReactJS, continuously deployed via Vercel for instant stakeholder visibility.',
-      'Implemented efficient CI/CD workflows using Google Cloud Build, significantly improving deployment speed and system reliability.',
-      'Containerized modular applications using Docker to guarantee consistent environments across local development and production.',
-      'Owned end-to-end deployment pipelines, incorporating environment setup, precise cloud configuration, and proactive system monitoring.',
+      'Built and maintained the Amazon data platform: SP-API, Vendor Central, Ads API, Marketing Cloud, and pricing reports ingested on a schedule into BigQuery by a FastAPI service on Cloud Run, with Cloud Tasks queues, retries, and MERGE writes so reruns do not duplicate rows.',
+      'Built Delos end to end: a React and TypeScript chat app and a FastAPI backend that runs Claude on Vertex AI and reaches the pipelines through MCP, with per-account tool grants and a confirm step before any write.',
+      'Built React dashboards for the Obseron suite: Amazon report runs that show finished, in-progress, and failed jobs, plus price tracking and brand analytics, deployed on Vercel.',
+      'Set up release builds with Google Cloud Build that build the Docker image and deploy it to Cloud Run, and containerized the services so each release ships as one image.',
+      'Added status endpoints, a report coverage matrix with gap-fill, and Cloud Logging so failed or missing runs are easy to find.',
+      'Wrote the platform’s VitePress documentation site: report catalogs, runbooks, and design decisions.',
     ],
-    tags: ['FastAPI', 'GCP', 'ReactJS', 'Docker', 'Cloud Build', 'Vercel', 'SP-API', 'Ads API'],
+    tags: [
+      'FastAPI',
+      'Python',
+      'GCP',
+      'BigQuery',
+      'Cloud Run',
+      'Docker',
+      'Cloud Build',
+      'MCP',
+      'ReactJS',
+      'Vercel',
+      'SP-API',
+      'Ads API',
+    ],
   },
   {
     title: 'Software Developer',
@@ -115,7 +128,7 @@ const Experience = () => (
     description="What I've built, and the tools I used to ship it."
     layout="split"
   >
-    <Reveal>
+    <Reveal each=":scope > ul > li">
       <ul className="focus-list">
         {experiences.map((item) => (
           <ExperienceItem key={`${item.title}-${item.period}`} item={item} />
