@@ -91,7 +91,7 @@ const skillCategories: { title: string; dot: string; items: SkillItem[] }[] = [
       { name: 'Cloud Run', icon: <SiGooglecloud /> },
       { name: 'BigQuery', icon: <SiGooglebigquery /> },
       { name: 'Cloud Tasks', icon: <SiGooglecloud /> },
-      { name: 'Cloud Schedulers', icon: <SiGooglecloud /> },
+      { name: 'Cloud Scheduler', icon: <SiGooglecloud /> },
       { name: 'Cloud Build', icon: <SiGooglecloud /> },
       { name: 'Vercel', icon: <SiVercel /> },
       { name: 'Railway', icon: <SiRailway /> },
