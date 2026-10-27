@@ -1,4 +1,8 @@
-import { useId } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
+import { createTimeline } from 'animejs/timeline';
+import { createDrawable } from 'animejs/svg';
+import { set, stagger } from 'animejs/utils';
+import { prefersReducedMotion, useOnceInView } from '@/lib/motion';
 
 const FLOW = '#f472b6';
 const DEPLOY = '#67e8f9';
@@ -15,7 +19,7 @@ interface NodeProps {
 const NODE_H = 52;
 
 const Node = ({ x, y, w, title, sub, accent }: NodeProps) => (
-  <g>
+  <g data-pd="node">
     <rect x={x} y={y} width={w} height={NODE_H} rx={10} fill="#12121a" stroke="rgba(255,255,255,0.14)" />
     <rect x={x + 14} y={y} width={w - 28} height={2} rx={1} fill={accent} />
     <text
@@ -42,10 +46,66 @@ const Label = ({ x, y, children }: { x: number; y: number; children: string }) =
   </text>
 );
 
+interface EdgeProps {
+  d: string;
+  kind: 'flow' | 'deploy';
+  head: string;
+}
+
+/** One connector. Flow lines carry the animated dash; deploy lines are a static dotted line. */
+const Edge = ({ d, kind, head }: EdgeProps) =>
+  kind === 'flow' ? (
+    <path
+      data-pd="edge"
+      data-kind="flow"
+      d={d}
+      fill="none"
+      stroke={FLOW}
+      strokeWidth={1.6}
+      className="diagram-flow"
+      markerEnd={`url(#${head})`}
+    />
+  ) : (
+    <path
+      data-pd="edge"
+      data-kind="deploy"
+      d={d}
+      fill="none"
+      stroke={DEPLOY}
+      strokeWidth={1.3}
+      strokeDasharray="2 4"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      markerEnd={`url(#${head})`}
+    />
+  );
+
+/**
+ * Puts a pipeline diagram back to its finished look. Safe to call at any time:
+ * on completion, on unmount mid-animation, or when the animation never ran.
+ */
+function restore(svg: SVGSVGElement) {
+  for (const el of svg.querySelectorAll<SVGElement>('[data-pd]')) {
+    el.style.opacity = '';
+    el.style.transform = '';
+    el.style.markerEnd = '';
+  }
+  for (const el of svg.querySelectorAll<SVGElement>('[data-pd="edge"]')) {
+    el.removeAttribute('pathLength');
+    el.removeAttribute('stroke-dashoffset');
+    if (el.dataset.kind === 'flow') {
+      el.removeAttribute('stroke-dasharray');
+      el.classList.add('diagram-flow');
+    } else {
+      el.setAttribute('stroke-dasharray', '2 4');
+    }
+  }
+}
+
 export const PIPELINE_DESCRIPTION =
-  'Architecture of the Amazon API Data Platform. Amazon SP-API and Ads API data is ingested by a FastAPI service on Cloud Run, ' +
-  'started by Cloud Scheduler and queued through Cloud Tasks. The data is stored in BigQuery and served by a second FastAPI service on Cloud Run ' +
-  'to Obseron and Delos. Cloud Build builds the Docker images and deploys both Cloud Run services.';
+  'Architecture of the Amazon API Data Platform. Cloud Scheduler starts jobs and Cloud Tasks queues them. One FastAPI service on Cloud Run ' +
+  'ingests Amazon SP-API and Ads API data, writes it to BigQuery, and reads it back to serve Obseron through its API and Delos through MCP. ' +
+  'Cloud Build builds the Docker image and deploys the service.';
 
 interface PipelineDiagramProps {
   className?: string;
@@ -53,23 +113,57 @@ interface PipelineDiagramProps {
 
 const PipelineDiagram = ({ className }: PipelineDiagramProps) => {
   const id = useId();
+  const svgRef = useRef<SVGSVGElement>(null);
   const flowHead = `${id}-flow`;
   const deployHead = `${id}-deploy`;
   const titleId = `${id}-title`;
 
-  const flow = { fill: 'none', stroke: FLOW, strokeWidth: 1.6, className: 'diagram-flow' } as const;
-  const deploy = {
-    fill: 'none',
-    stroke: DEPLOY,
-    strokeWidth: 1.3,
-    strokeDasharray: '2 4',
-    strokeLinejoin: 'round',
-    strokeLinecap: 'round',
-  } as const;
+  // Hidden before first paint; the intro plays when the diagram scrolls into view.
+  useLayoutEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || prefersReducedMotion()) return;
+    set(svg.querySelectorAll('[data-pd="box"], [data-pd="edge"]'), { opacity: 0 });
+    set(svg.querySelectorAll('[data-pd="node"]'), { opacity: 0, y: 10 });
+    return () => restore(svg);
+  }, []);
+
+  useOnceInView(
+    svgRef,
+    (el) => {
+      const svg = el as SVGSVGElement;
+      const q = (name: string) => Array.from(svg.querySelectorAll<SVGElement>(`[data-pd="${name}"]`));
+      const edges = q('edge');
+
+      // The dash animation and the draw-in both own the dash properties, so
+      // hand them over for the draw and give them back afterwards.
+      for (const edge of edges) {
+        edge.classList.remove('diagram-flow');
+        edge.removeAttribute('stroke-dasharray');
+        edge.style.markerEnd = 'none';
+      }
+      const drawables = createDrawable(edges as unknown as SVGGeometryElement[]);
+
+      const timeline = createTimeline({
+        defaults: { ease: 'outExpo' },
+        onComplete: () => restore(svg),
+      })
+        .add(q('box'), { opacity: 1, duration: 500 }, 0)
+        .add(q('node'), { opacity: 1, y: [10, 0], duration: 700 }, stagger(85, { start: 150 }))
+        .add(edges, { opacity: 1, duration: 80 }, stagger(70, { start: 520 }))
+        .add(drawables, { draw: ['0 0', '0 1'], duration: 650, ease: 'inOutQuad' }, stagger(70, { start: 520 }));
+
+      return () => {
+        timeline.pause();
+        restore(svg);
+      };
+    },
+    { margin: '0px', threshold: 0.25 },
+  );
 
   return (
     <svg
-      viewBox="0 0 700 345"
+      ref={svgRef}
+      viewBox="0 0 620 345"
       role="img"
       aria-labelledby={titleId}
       className={className}
@@ -87,9 +181,10 @@ const PipelineDiagram = ({ className }: PipelineDiagramProps) => {
 
       {/* Google Cloud boundary */}
       <rect
+        data-pd="box"
         x={140}
         y={20}
-        width={420}
+        width={300}
         height={290}
         rx={16}
         fill="rgba(255,255,255,0.025)"
@@ -106,19 +201,17 @@ const PipelineDiagram = ({ className }: PipelineDiagramProps) => {
 
       {/* Connectors sit under the nodes */}
       <g>
-        <path d="M116 122 C 200 122, 220 160, 272 160" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M116 202 C 200 202, 220 160, 272 160" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M260 88 L286 88" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M338 114 L338 144" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M404 172 L442 172" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M494 198 L494 236" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M544 264 C 566 264, 566 232, 586 232" {...flow} markerEnd={`url(#${flowHead})`} />
-        <path d="M544 264 C 566 264, 566 296, 586 296" {...flow} markerEnd={`url(#${flowHead})`} />
-
-        <path d="M206 238 L206 190 L270 190" {...deploy} markerEnd={`url(#${deployHead})`} />
-        <path d="M260 264 L442 264" {...deploy} markerEnd={`url(#${deployHead})`} />
+        <Edge d="M116 122 C 200 122, 220 160, 272 160" kind="flow" head={flowHead} />
+        <Edge d="M116 202 C 200 202, 220 160, 272 160" kind="flow" head={flowHead} />
+        <Edge d="M260 88 L286 88" kind="flow" head={flowHead} />
+        <Edge d="M338 114 L338 144" kind="flow" head={flowHead} />
+        <Edge d="M318 198 L318 236" kind="flow" head={flowHead} />
+        <Edge d="M358 238 L358 200" kind="flow" head={flowHead} />
+        <Edge d="M404 172 C 450 172, 460 232, 506 232" kind="flow" head={flowHead} />
+        <Edge d="M404 172 C 450 172, 460 296, 506 296" kind="flow" head={flowHead} />
+        <Edge d="M206 238 L206 190 L270 190" kind="deploy" head={deployHead} />
       </g>
-      <text x={349} y={257} textAnchor="middle" fontSize={10} fill={DEPLOY} className="font-mono">
+      <text x={214} y={218} fontSize={10} fill={DEPLOY} className="font-mono">
         deploy
       </text>
 
@@ -130,16 +223,15 @@ const PipelineDiagram = ({ className }: PipelineDiagramProps) => {
 
       <Node x={152} y={62} w={108} title="Cloud Scheduler" sub="runs" accent="#a78bfa" />
       <Node x={288} y={62} w={100} title="Cloud Tasks" sub="queue" accent="#a78bfa" />
-      <Node x={272} y={146} w={132} title="Cloud Run" sub="FastAPI · ingest" accent={FLOW} />
-      <Node x={444} y={146} w={100} title="BigQuery" sub="warehouse" accent="#38bdf8" />
-      <Node x={444} y={238} w={100} title="Cloud Run" sub="FastAPI · API" accent={FLOW} />
-      <Node x={152} y={238} w={108} title="Cloud Build" sub="Docker CI/CD" accent={DEPLOY} />
+      <Node x={272} y={146} w={132} title="Cloud Run" sub="FastAPI service" accent={FLOW} />
+      <Node x={272} y={238} w={132} title="BigQuery" sub="warehouse" accent="#38bdf8" />
+      <Node x={152} y={238} w={108} title="Cloud Build" sub="Docker builds" accent={DEPLOY} />
 
-      <Label x={588} y={196}>
+      <Label x={508} y={196}>
         CONSUMERS
       </Label>
-      <Node x={588} y={206} w={100} title="Obseron" sub="React app" accent="#34d399" />
-      <Node x={588} y={270} w={100} title="Delos" sub="via MCP" accent="#34d399" />
+      <Node x={508} y={206} w={100} title="Obseron" sub="React app" accent="#34d399" />
+      <Node x={508} y={270} w={100} title="Delos" sub="via MCP" accent="#34d399" />
 
       {/* Legend */}
       <line x1={156} y1={330} x2={180} y2={330} stroke={FLOW} strokeWidth={1.6} strokeDasharray="5 5" />
