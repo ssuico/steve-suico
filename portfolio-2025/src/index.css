@@ -11,17 +11,7 @@
   --color-line: rgb(255 255 255 / 0.08);
   --color-muted: #9a9aae;
 
-  --animate-marquee: marquee 48s linear infinite;
   --animate-float: float 7s ease-in-out infinite;
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
 
   @keyframes float {
     0%,
@@ -223,10 +213,6 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .motion-marquee {
-    animation: none !important;
-  }
-
   .diagram-flow {
     animation: none !important;
   }

@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaDownload, FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaTwitter } from 'react-icons/fa';
 import { projects } from '@/data/projects';
 import { site, yearsInProduction } from '@/data/site';
+import CountUp from './CountUp';
 import HeroConstellation from './HeroConstellation';
-import TechMarquee from './TechMarquee';
+import StackPipeline from './StackPipeline';
+import { useHeroIntro } from './useHeroIntro';
 
 const socials = [
   { label: 'GitHub', href: site.github, icon: FaGithub },
@@ -14,6 +16,20 @@ const socials = [
   { label: 'Email', href: `mailto:${site.email}`, icon: FaEnvelope },
   { label: 'Phone', href: site.phoneHref, icon: FaPhone },
 ];
+
+/**
+ * One word of the name inside a clip mask, so the intro can slide it up from
+ * below. The gradient goes on the moving element itself: background-clip text
+ * does not survive being put on a parent of separately transformed words.
+ * The small bottom padding keeps descenders (the y in Bryan) out of the clip.
+ */
+const NameWord = ({ children, className = '' }: { children: string; className?: string }) => (
+  <span className="-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom">
+    <span data-hero="word" className={`inline-block ${className}`}>
+      {children}
+    </span>
+  </span>
+);
 
 const focuses = ['full-stack web apps', 'data pipelines', 'cloud infrastructure', 'AI-assisted workflows'];
 
@@ -69,26 +85,23 @@ function useLocalTime() {
 
 const Home = () => {
   const time = useLocalTime();
-  const reduceMotion = useReducedMotion();
+  const rootRef = useRef<HTMLElement>(null);
+  useHeroIntro(rootRef);
 
-  const stats = [
-    { value: `${yearsInProduction()}+`, label: 'Years in production' },
-    { value: String(projects.length), label: 'Case studies' },
-    { value: '24h', label: 'Typical reply' },
-    { value: time, label: `${site.location} · GMT+8` },
+  const stats: { label: string; to?: number; suffix?: string; text?: string }[] = [
+    { to: yearsInProduction(), suffix: '+', label: 'Years in production' },
+    { to: projects.length, label: 'Case studies' },
+    { to: 24, suffix: 'h', label: 'Typical reply' },
+    { text: time, label: `${site.location} · GMT+8` },
   ];
 
   return (
-    <section id="home" className="relative flex min-h-screen w-full flex-col overflow-hidden">
+    <section ref={rootRef} id="home" className="relative flex min-h-screen w-full flex-col overflow-hidden">
       <HeroConstellation />
 
       <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 items-center gap-14 px-5 pb-16 pt-32 lg:grid-cols-[1.15fr_0.85fr]">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white/5 px-3.5 py-1.5 text-xs text-pink-100">
+        <div>
+          <p data-hero="badge" className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white/5 px-3.5 py-1.5 text-xs text-pink-100">
             <span className="relative flex h-2 w-2" aria-hidden="true">
               <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/70 motion-safe:animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -96,27 +109,27 @@ const Home = () => {
             {site.availability}
           </p>
 
-          <p className="eyebrow mt-8 text-pink-400">{'// hello, world'}</p>
+          <p data-hero="eyebrow" className="eyebrow mt-8 text-pink-400">{'// hello, world'}</p>
           <h1 className="mt-3 text-5xl font-bold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
-            Steve Bryan{' '}
-            <span className="bg-gradient-to-r from-pink-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
+            <NameWord>Steve</NameWord> <NameWord>Bryan</NameWord>{' '}
+            <NameWord className="bg-gradient-to-r from-pink-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
               Suico
-            </span>{' '}
-            Jr.
+            </NameWord>{' '}
+            <NameWord>Jr.</NameWord>
           </h1>
 
-          <p className="mt-6">
+          <p data-hero="item" className="mt-6">
             <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">{site.role}</span>
             <span className="mt-1 block text-lg text-gray-300 sm:text-xl">
               I build <RotatingFocus />
             </span>
           </p>
-          <p className="mt-4 max-w-xl leading-relaxed text-muted">
+          <p data-hero="item" className="mt-4 max-w-xl leading-relaxed text-muted">
             Building and deploying full-stack web applications from concept to production. I use modern tooling,
             including AI-assisted workflows, to ship work people can rely on.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div data-hero="item" className="mt-9 flex flex-wrap items-center gap-3">
             <Link to="/contact" className="btn btn-primary">
               Get in touch
             </Link>
@@ -131,7 +144,7 @@ const Home = () => {
 
           <ul className="mt-9 flex gap-3">
             {socials.map((social) => (
-              <li key={social.label}>
+              <li key={social.label} data-hero="social">
                 <a
                   href={social.href}
                   target={social.href.startsWith('http') ? '_blank' : undefined}
@@ -144,14 +157,9 @@ const Home = () => {
               </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-[340px]"
-        >
+        <div data-hero="photo" className="relative mx-auto w-full max-w-[340px]">
           <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-pink-500/30 via-violet-500/20 to-cyan-400/20 blur-2xl" />
           <div className="relative rounded-3xl border border-white/10 bg-white/5 p-1.5">
             <img
@@ -176,7 +184,7 @@ const Home = () => {
             <p className="eyebrow">Currently</p>
             <p className="mt-0.5 text-xs text-white">R&amp;D Developer, Channel Precision</p>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="relative z-10 border-y border-line bg-ink/60 backdrop-blur-sm">
@@ -184,13 +192,21 @@ const Home = () => {
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col-reverse">
               <dt className="eyebrow mt-1">{stat.label}</dt>
-              <dd className="font-display text-3xl font-semibold text-white tabular-nums">{stat.value}</dd>
+              <dd className="font-display text-3xl font-semibold text-white tabular-nums">
+                {stat.to !== undefined ? <CountUp to={stat.to} suffix={stat.suffix} /> : stat.text}
+              </dd>
             </div>
           ))}
         </dl>
       </div>
-      <div className="relative z-10">
-        <TechMarquee />
+      <div className="relative z-10 border-b border-line">
+        <div className="mx-auto max-w-6xl px-5 pb-12 pt-14">
+          <p className="eyebrow text-pink-400">{'// how I ship'}</p>
+          <h2 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">Idea to production</h2>
+          <div className="mt-8">
+            <StackPipeline />
+          </div>
+        </div>
       </div>
     </section>
   );

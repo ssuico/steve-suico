@@ -10,7 +10,6 @@ import Layout from '@/layout/Layout';
 import NotFound from '@/views/NotFound';
 
 const ProjectDetail = lazy(() => import('@/views/projects/ProjectDetail'));
-
 const PageFallback = () => (
   <div className="flex min-h-screen items-center justify-center font-mono text-sm text-muted">
     Loading…
